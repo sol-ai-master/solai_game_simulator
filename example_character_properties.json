@@ -1,0 +1,35 @@
+{
+  "radius": 10,
+  "moveAccel": 2000,
+  "abilities": [
+    {
+      "type": "melee",
+      "radius":20,
+      "distanceFromChar": 128,
+      "activeHitboxTime": 6,
+      "startupTime": 6,
+      "endlagTime": 6,
+      "rechargeTime": 13,
+      "damage": 150,
+      "baseKnockBack": 600,
+      "knockbackRatio": 0.7,
+      "knockbackPoint": -100,
+      "knockbackTowardsPoint": false
+    },
+    {
+      "type": "melee",
+      "radius":20,
+      "distanceFromChar": 128,
+      "speed": 10,
+      "lifetime": 120,
+      "startupTime": 6,
+      "endlagTime": 6,
+      "rechargeTime": 13,
+      "damage": 150,
+      "baseKnockBack": 600,
+      "knockbackRatio": 0.7,
+      "knockbackPoint": -100,
+      "knockbackTowardsPoint": false
+    }
+  ]
+}
