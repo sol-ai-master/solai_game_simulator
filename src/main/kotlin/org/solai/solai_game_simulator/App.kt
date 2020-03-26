@@ -13,7 +13,8 @@ class App {
         charQ.connect()
         charQ.pushSimulation(GameSimulationData(
                 simulationId = "sim1",
-                charactersData = listOf()
+                charactersData = listOf(),
+                metrics = listOf("hei")
         ))
 
         for (i in 0..4) {

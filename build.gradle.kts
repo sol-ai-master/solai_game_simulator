@@ -34,9 +34,13 @@ dependencies {
 
     implementation("redis.clients:jedis:3.2.0")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.10.+")
+
+    implementation("io.github.microutils:kotlin-logging:1.7.9")
+    implementation("org.slf4j:slf4j-simple:1.7.26")
 }
 
 application {
     // Define the main class for the application.
     mainClassName = "org.solai.solai_game_simulator.AppKt"
+    this.applicationDefaultJvmArgs = listOf("-Dorg.slf4j.simpleLogger.defaultLogLevel=debug")
 }

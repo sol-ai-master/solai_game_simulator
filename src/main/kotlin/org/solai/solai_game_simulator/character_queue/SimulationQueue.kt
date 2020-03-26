@@ -99,7 +99,7 @@ class CharacterQueue {
             return null
         }
 
-        logger.info { "$POLL_SIMULATION_LOG_PREFIX: $simulationResult" }
+        logger.debug { "$POLL_SIMULATION_LOG_PREFIX: $simulationResult" }
         return simulationResult
     }
 
