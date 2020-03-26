@@ -3,24 +3,38 @@
  */
 package org.solai.solai_game_simulator
 
-import org.solai.solai_game_simulator.character_queue.CharacterQueue
 import org.solai.solai_game_simulator.character_queue.GameSimulationData
+import org.solai.solai_game_simulator.character_queue.RedisSimulationQueue
+import org.solai.solai_game_simulator.character_queue.SimulationQueue
 
 class App {
 
     init {
-        val charQ = CharacterQueue()
-        charQ.connect()
-        charQ.pushSimulation(GameSimulationData(
-                simulationId = "sim1",
-                charactersData = listOf(),
-                metrics = listOf("hei")
-        ))
+        val charQ: SimulationQueue = RedisSimulationQueue()
+        charQ.connect("localhost")
 
-        for (i in 0..4) {
-            charQ.pollSimulation()
+
+        Thread() {
+            var i = 0
+            while (true) {
+                val charQ2:  SimulationQueue = RedisSimulationQueue()
+                charQ2.connect("localhost")
+                charQ2.pushSimulationData(GameSimulationData(
+                        simulationId = "sim1 $i",
+                        charactersData = listOf(),
+                        metrics = listOf("hei")
+                ))
+                i++
+                Thread.sleep(1000)
+            }
+
+        }.start()
+
+        while (true) {
+            val simData = charQ.waitSimulationData(3)
+            println(simData)
+            Thread.sleep(3000)
         }
-
     }
 }
 
