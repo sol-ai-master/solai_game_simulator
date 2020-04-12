@@ -8,6 +8,9 @@ import org.solai.solai_game_simulator.character_queue.RedisSimulationQueue
 import org.solai.solai_game_simulator.character_queue.SimulationQueue
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import sol_game.CharacterConfigLoader
+import java.lang.IllegalStateException
+import java.util.*
 
 @SpringBootApplication
 class App
@@ -17,21 +20,35 @@ fun main(args: Array<String>) {
 //    testQueue()
 }
 
+fun postExampleCharToQueue() {
+    val charQ: SimulationQueue = SimulationQueue.getQueue("localhost") ?: run {
+        throw IllegalStateException("Could not connect to simulation queue")
+    }
+
+    val charConfig = CharacterConfigLoader.fromResourceFile("frankCharacterConfig.json")
+
+    charQ.pushSimulationData(GameSimulationData(
+            UUID.randomUUID().toString(),
+            listOf(charConfig, charConfig),
+            listOf("gameLength", "nearDeathScenerios")
+    ))
+}
+
 
 fun testQueue() {
 
-    val charQ: SimulationQueue = RedisSimulationQueue()
-    charQ.connect("localhost")
+    val charQ: SimulationQueue = SimulationQueue.getQueue("localhost") ?: run {
+        throw IllegalStateException("Could not connect to simulation queue")
+    }
 
 
     Thread() {
         var i = 0
         while (true) {
-            val charQ2:  SimulationQueue = RedisSimulationQueue()
-            charQ2.connect("localhost")
+            val charQ2:  SimulationQueue = SimulationQueue.getQueue("localhost")!!
             charQ2.pushSimulationData(GameSimulationData(
                     simulationId = "sim1 $i",
-                    charactersData = listOf(),
+                    charactersConfigs = listOf(),
                     metrics = listOf("hei")
             ))
             i++

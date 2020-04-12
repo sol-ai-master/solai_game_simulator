@@ -19,6 +19,11 @@ configurations {
     }
 }
 
+// check for new versions of dependencies always. Used for updating sol_champ
+configurations.all {
+    resolutionStrategy.cacheDynamicVersionsFor(1, "minutes")
+}
+
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.

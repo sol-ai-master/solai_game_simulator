@@ -1,19 +1,11 @@
 package org.solai.solai_game_simulator.character_queue
 
-data class AbilityData(
-        val type: String
-)
+import sol_game.core_game.CharacterConfig
 
-data class CharacterData(
-        val characterId: String,
-        val moveAcceleration: Float,
-        val characterRadius: Float,
-        val abilitiesData: List<AbilityData>
-)
 
 data class GameSimulationData(
         val simulationId: String,
-        val charactersData: List<CharacterData>,
+        val charactersConfigs: List<CharacterConfig>,
         val metrics: List<String>
 )
 

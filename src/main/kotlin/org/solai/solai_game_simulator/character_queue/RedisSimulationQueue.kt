@@ -24,10 +24,10 @@ class RedisSimulationQueue : SimulationQueue {
     private lateinit var jedis: Jedis
     private val jsonMapper = jacksonObjectMapper()
 
-    override fun connect(address: String): Boolean {
+    fun connect(address: String): Boolean {
         jedis = Jedis(address)
-
-        return jedis.isConnected
+//        jedis.connect()
+        return true //jedis.isConnected
     }
 
     override fun close() {
@@ -35,9 +35,9 @@ class RedisSimulationQueue : SimulationQueue {
     }
 
     override fun pushSimulationData(simulationData: GameSimulationData) {
-        logger.debug { "$PUSH_SIMULATION_LOG_PREFIX: $simulationData" }
+        logger.info { "$PUSH_SIMULATION_LOG_PREFIX: $simulationData" }
         val serializedSimulationData = simulationDataToMessage(simulationData)
-        logger.debug { "$PUSH_SIMULATION_LOG_PREFIX, raw json: $serializedSimulationData" }
+        logger.info { "$PUSH_SIMULATION_LOG_PREFIX, raw json: $serializedSimulationData" }
         jedisCall(PUSH_SIMULATION_LOG_PREFIX) { it.lpush(SIMULATION_DATA_QUEUE_LABEL, serializedSimulationData) }
     }
 

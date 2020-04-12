@@ -5,6 +5,7 @@ import sol_engine.network.network_game.game_server.ServerConnectionData
 import sol_game.CharacterConfigLoader
 import sol_game.core_game.CharacterConfig
 import sol_game.game.SolGameServer
+import sol_game.game.TerminationCallback
 import java.util.*
 import kotlin.collections.HashMap
 import kotlin.collections.LinkedHashMap
@@ -23,17 +24,24 @@ class GameServerPool {
     private val runningGameServers: MutableMap<String, SolGameServer> = Collections.synchronizedMap(LinkedHashMap())
 
 
-    fun startNewGame(headless: Boolean = true): ServerConnectionData {
-        val frankConfig: CharacterConfig = CharacterConfigLoader.fromResourceFile("frankCharacterConfig.json")
-        val schmathiasConfig: CharacterConfig = CharacterConfigLoader.fromResourceFile("schmathiasCharacterConfig.json")
+    fun startNewGame(
+            characterConfigs: List<CharacterConfig>? = null,
+            terminationCallback: TerminationCallback = {},
+            headless: Boolean = true
+    ): ServerConnectionData {
+        val useCharacterConfigs = characterConfigs ?: listOf(
+                CharacterConfigLoader.fromResourceFile("frankCharacterConfig.json"),
+                CharacterConfigLoader.fromResourceFile("schmathiasCharacterConfig.json")
+        )
         val gameServer = SolGameServer(
-                listOf(frankConfig, schmathiasConfig),
+                useCharacterConfigs,
                 -1,
                 true,
                 headless,
                 !headless,
                 !headless
         )
+        gameServer.onTermination { terminationCallback.invoke(it) }
         val connectionData = gameServer.setup()
         gameServer.onTermination { runningGameServers.remove(connectionData.gameId) }
         gameServer.start()
