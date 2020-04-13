@@ -4,7 +4,6 @@
 package org.solai.solai_game_simulator
 
 import org.solai.solai_game_simulator.character_queue.GameSimulationData
-import org.solai.solai_game_simulator.character_queue.RedisSimulationQueue
 import org.solai.solai_game_simulator.character_queue.SimulationQueue
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -25,7 +24,7 @@ fun postExampleCharToQueue() {
         throw IllegalStateException("Could not connect to simulation queue")
     }
 
-    val charConfig = CharacterConfigLoader.fromResourceFile("frankCharacterConfig.json")
+    val charConfig = CharacterConfigLoader.fromResourceFile("{\n  \"name\": \"Frank\",\n  \"radius\": 48,\n  \"moveVelocity\": 48,\n  \"abilities\": [\n    {\n      \"name\": \"rapid shot\",\n      \"type\": \"PROJECTILE\",\n      \"radius\": 10,\n      \"distanceFromChar\": 48,\n      \"speed\": 600,\n      \"activeTime\": 100,\n      \"startupTime\": 1,\n      \"executionTime\": 0,\n      \"endlagTime\": 0,\n      \"rechargeTime\": 10,\n      \"damage\": 20,\n      \"baseKnockback\": 100,\n      \"knockbackRatio\": 1,\n      \"knockbackPoint\": 32,\n      \"knockbackTowardPoint\": false\n    },\n    {\n      \"name\": \"mega shot\",\n      \"type\": \"PROJECTILE\",\n      \"radius\": 64,\n      \"distanceFromChar\": 128,\n      \"speed\": 1000,\n      \"activeTime\": 100,\n      \"startupTime\": 15,\n      \"executionTime\": 1,\n      \"endlagTime\": 5,\n      \"rechargeTime\": 10,\n      \"damage\": 20,\n      \"baseKnockback\": 100,\n      \"knockbackRatio\": 1,\n      \"knockbackPoint\": 32,\n      \"knockbackTowardPoint\": false\n    },\n    {\n      \"name\": \"get off\",\n      \"type\": \"MELEE\",\n      \"radius\": 256,\n      \"distanceFromChar\": 0,\n      \"speed\": 0,\n      \"activeTime\": 1,\n      \"startupTime\": 3,\n      \"executionTime\": 3,\n      \"endlagTime\": 7,\n      \"rechargeTime\": 10,\n      \"damage\": 20,\n      \"baseKnockback\": 100,\n      \"knockbackRatio\": 1,\n      \"knockbackPoint\": 32,\n      \"knockbackTowardPoint\": false\n    }\n  ]\n}\n")
 
     charQ.pushSimulationData(GameSimulationData(
             UUID.randomUUID().toString(),
