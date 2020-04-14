@@ -1,25 +1,55 @@
 package org.solai.solai_game_simulator
 
-import org.junit.Assert
-import org.solai.solai_game_simulator.character_queue.GameSimulationData
-import sol_game.CharacterConfigLoader
+
+
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.BeforeEach
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedDeque
-import kotlin.test.Test
+
 
 class SimulationsHandlerTest {
 
+    lateinit var simulationsHandler: SimulationsHandler
+
+    @BeforeEach
+    fun setUp() {
+        simulationsHandler = SimulationsHandler()
+    }
+
+    @AfterEach
+    fun tearDown() {
+        simulationsHandler.terminate()
+    }
+
     @Test
-    fun testSimulations() {
+    fun testDummySimulation() {
 
-        val finishedSimulations: Deque<Simulation> = ConcurrentLinkedDeque()
+        val finishedSimulations: Deque<Simulation> = ConcurrentLinkedDeque<Simulation>()
 
-        val simulationsHandler = SimulationsHandler()
+
         simulationsHandler.onSimulationFinished { simulation ->
-            finishedSimulations.add(simulation)
+            finishedSimulations.addFirst(simulation)
         }
 
-//        val charConfigs = listOf(
+        val dummySims = (0..2)
+                .map { DummySimulation("hei$it") }
+                .onEach { simulationsHandler.performSimulation(it) }
+
+        while (finishedSimulations.size < 1) {
+            Thread.sleep(100)
+        }
+
+        assertEquals(3, finishedSimulations.size)
+        dummySims.forEach { assertTrue(finishedSimulations.contains(it)) }
+
+    }
+
+    @Test
+    fun testSolSimulation() {
+        //        val charConfigs = listOf(
 //                CharacterConfigLoader.fromResourceFile("frankCharacterConfig.json"),
 //                CharacterConfigLoader.fromResourceFile("schmathiasCharacterConfig.json")
 //        )
@@ -29,14 +59,5 @@ class SimulationsHandlerTest {
 //                listOf("m1", "m2", "m3")
 //        )
 //        val sim1 = SolSimulation(simData)
-
-        val dummySim = simulationsHandler.submit(DummySimulation("hei"))
-
-        while (finishedSimulations.size < 1) {
-            Thread.sleep(100)
-        }
-
-        Assert.assertEquals(finishedSimulations.first, dummySim)
     }
-
 }

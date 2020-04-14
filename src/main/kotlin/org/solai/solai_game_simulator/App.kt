@@ -3,6 +3,9 @@
  */
 package org.solai.solai_game_simulator
 
+import ch.qos.logback.classic.Level
+import ch.qos.logback.classic.Logger
+import org.slf4j.LoggerFactory
 import org.solai.solai_game_simulator.character_queue.GameSimulationData
 import org.solai.solai_game_simulator.character_queue.SimulationQueue
 import org.springframework.boot.SpringApplication
@@ -15,6 +18,9 @@ import java.util.*
 class App
 
 fun main(args: Array<String>) {
+    val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as Logger
+    rootLogger.level = Level.WARN
+
     SpringApplication.run(App::class.java, *args)
 //    testQueue()
 }

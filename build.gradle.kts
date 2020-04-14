@@ -21,8 +21,9 @@ configurations {
 
 // check for new versions of dependencies always. Used for updating sol_champ
 configurations.all {
-    resolutionStrategy.cacheDynamicVersionsFor(1, "minutes")
+    resolutionStrategy.cacheDynamicVersionsFor(1, "seconds")
 }
+
 
 repositories {
     // Use jcenter for resolving dependencies.
@@ -30,28 +31,28 @@ repositories {
     jcenter()
     mavenCentral()
     maven { url = uri("https://jitpack.io") }
-    maven { url = uri("file://${projectDir}/../solai_maven_repo") }
+//    maven { url = uri("file://${projectDir}/../solai_maven_repo") }
 }
 
 dependencies {
     // Align versions of all Kotlin components
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+//    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+
+    // Use the Kotlin test library.
+//    testImplementation("org.jetbrains.kotlin:kotlin-test")
+
+    // Use the Kotlin JUnit integration.
+//    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+
 
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
 
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
-    // Use the Kotlin test library.
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-
-    // Use the Kotlin JUnit integration.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
-
     implementation("redis.clients:jedis:3.2.0")
 
     implementation("io.github.microutils:kotlin-logging:1.7.9")
-//    implementation("org.slf4j:slf4j-simple:1.7.26")
 
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
@@ -63,20 +64,11 @@ dependencies {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
     implementation("com.github.sol-ai:sol_champ:-SNAPSHOT")
-//    implementation("org.solai:sol_game:1.0")
-//
-//    val lwjglNatives = "natives-windows"
-//    val lwjgl_version = "3.2.3"
-//    val natives by configurations.creating
-//    listOf("", "-glfw", "-opengl", "-stb").forEach {
-//        println("Loading $lwjglNatives for lib: $it")
-//        natives("org.lwjgl:lwjgl$it:${lwjgl_version}:$lwjglNatives")
-//    }
-//    configurations["runtimeOnly"].extendsFrom(natives)
 }
 
 tasks.withType<Test> {
     useJUnitPlatform()
+    jvmArgs = listOf("-Dlogging.root.level=warn")
 }
 
 tasks.withType<KotlinCompile> {

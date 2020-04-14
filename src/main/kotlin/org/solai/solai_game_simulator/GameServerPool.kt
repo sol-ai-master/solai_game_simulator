@@ -36,9 +36,9 @@ class GameServerPool {
                 useCharacterConfigs,
                 -1,
                 true,
-                headless,
-                !headless,
-                !headless
+                headless = headless,
+                debugUI = !headless,
+                allowGui = !headless
         )
         gameServer.onTermination { terminationCallback.invoke(it) }
         val connectionData = gameServer.setup()

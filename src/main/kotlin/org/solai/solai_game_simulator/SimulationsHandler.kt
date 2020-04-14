@@ -5,7 +5,7 @@ import java.util.concurrent.*
 import kotlin.collections.LinkedHashMap
 
 
-typealias SimulationFinishedListener = (simulationResult: Simulation) -> Unit
+typealias SimulationFinishedListener = (simulation: Simulation) -> Unit
 
 class SimulationsHandler {
 
@@ -20,7 +20,6 @@ class SimulationsHandler {
     ) {
         override fun afterExecute(r: Runnable?, t: Throwable?) {
             super.afterExecute(r, t)
-
             val simulation = r as Simulation
             simulationFinishedListener.invoke(simulation)
         }
@@ -28,7 +27,8 @@ class SimulationsHandler {
 
     private var simulationFinishedListener: SimulationFinishedListener = {}
 
-    fun submit(simulation: Simulation) {
+    fun performSimulation(simulation: Simulation) {
+        threadExecutor.execute(simulation)
         executingSimulations[simulation.simulationId] = simulation
     }
 
@@ -36,4 +36,8 @@ class SimulationsHandler {
         simulationFinishedListener = listener
     }
 
+    fun terminate() {
+        //        executingSimulations.forEach(sim -> sim.terminate())
+        threadExecutor.shutdownNow()
+    }
 }
