@@ -9,7 +9,7 @@ import sol_game.game.SolGameState
 
 class SolCustomServerSimulation(
         charactersConfigs: List<CharacterConfig>,
-        val metrics: List<SolGameMetric>,
+        val metrics: List<NamedMetric>,
         allowObservers: Boolean,
         headless: Boolean
 ) : SolGameSimulationServer(
@@ -45,14 +45,14 @@ class SolCustomServerSimulation(
         if (!hasStarted) {
             if (gameState.gameStarted) {
                 hasStarted = true
-                metrics.forEach { it.start(gameState) }
+                metrics.forEach { it.metric.start(gameState) }
             }
         } else if (!hasEnded) {
             if (gameState.gameEnded) {
                 hasEnded = true
-                metrics.forEach { it.end(gameState) }
+                metrics.forEach { it.metric.end(gameState) }
             } else {
-                metrics.forEach { it.update(gameState) }
+                metrics.forEach { it.metric.update(gameState) }
             }
         }
     }

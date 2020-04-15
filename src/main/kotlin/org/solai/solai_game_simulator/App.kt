@@ -19,7 +19,7 @@ class App
 
 fun main(args: Array<String>) {
     val rootLogger = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME) as Logger
-    rootLogger.level = Level.WARN
+    rootLogger.level = Level.INFO
 
     SpringApplication.run(App::class.java, *args)
 //    testQueue()

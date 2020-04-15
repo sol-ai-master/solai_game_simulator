@@ -1,5 +1,6 @@
 package org.solai.solai_game_simulator
 
+import mu.KotlinLogging
 import java.util.*
 import java.util.concurrent.*
 import kotlin.collections.LinkedHashMap
@@ -7,7 +8,9 @@ import kotlin.collections.LinkedHashMap
 
 typealias SimulationFinishedListener = (simulation: Simulation) -> Unit
 
-class SimulationsHandler {
+
+class SimulationExecutor {
+    val logger = KotlinLogging.logger {  }
 
     private val executingSimulations: MutableMap<String, Simulation> = Collections.synchronizedMap(LinkedHashMap())
 
@@ -21,19 +24,34 @@ class SimulationsHandler {
         override fun afterExecute(r: Runnable?, t: Throwable?) {
             super.afterExecute(r, t)
             val simulation = r as Simulation
-            simulationFinishedListener.invoke(simulation)
+            handleFinishedSimulation(simulation)
         }
     }
 
     private var simulationFinishedListener: SimulationFinishedListener = {}
 
-    fun performSimulation(simulation: Simulation) {
+    fun executeSimulation(simulation: Simulation) {
+        logger.info { "executing simulation: ${simulation.simulationId}" }
         threadExecutor.execute(simulation)
         executingSimulations[simulation.simulationId] = simulation
     }
 
+    private fun handleFinishedSimulation(simulation: Simulation) {
+        logger.info { "Simulation execution finished for: ${simulation.simulationId}" }
+        executingSimulations.remove(simulation.simulationId)
+        simulationFinishedListener.invoke(simulation)
+    }
+
     fun onSimulationFinished(listener: SimulationFinishedListener) {
         simulationFinishedListener = listener
+    }
+
+    fun getSimulationsCount(): Int {
+        return executingSimulations.size
+    }
+
+    fun getExecutingSimulationsIds(): List<String> {
+        return executingSimulations.keys.toList()
     }
 
     fun terminate() {

@@ -3,9 +3,6 @@ package org.solai.solai_game_simulator.sol_simulation
 import sol_game.game.SolGameState
 
 interface SolGameMetric {
-
-    val metricName: String
-
     fun setup() {}
     fun start(gameState: SolGameState) {}
     fun update(gameState: SolGameState)

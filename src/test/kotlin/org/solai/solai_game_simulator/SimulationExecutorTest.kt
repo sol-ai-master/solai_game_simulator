@@ -10,18 +10,18 @@ import java.util.*
 import java.util.concurrent.ConcurrentLinkedDeque
 
 
-class SimulationsHandlerTest {
+class SimulationExecutorTest {
 
-    lateinit var simulationsHandler: SimulationsHandler
+    lateinit var simulationExecutor: SimulationExecutor
 
     @BeforeEach
     fun setUp() {
-        simulationsHandler = SimulationsHandler()
+        simulationExecutor = SimulationExecutor()
     }
 
     @AfterEach
     fun tearDown() {
-        simulationsHandler.terminate()
+        simulationExecutor.terminate()
     }
 
     @Test
@@ -30,13 +30,13 @@ class SimulationsHandlerTest {
         val finishedSimulations: Deque<Simulation> = ConcurrentLinkedDeque<Simulation>()
 
 
-        simulationsHandler.onSimulationFinished { simulation ->
+        simulationExecutor.onSimulationFinished { simulation ->
             finishedSimulations.addFirst(simulation)
         }
 
         val dummySims = (0..2)
                 .map { DummySimulation("hei$it") }
-                .onEach { simulationsHandler.performSimulation(it) }
+                .onEach { simulationExecutor.executeSimulation(it) }
 
         while (finishedSimulations.size < 1) {
             Thread.sleep(100)

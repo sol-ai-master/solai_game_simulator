@@ -4,8 +4,6 @@ import sol_game.game.SolGameState
 
 class GameLengthMetric : SolGameMetric {
 
-    override val metricName: String = "gameLength"
-
     private var gameLength: Int = 0
 
     override fun update(gameState: SolGameState) {

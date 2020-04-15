@@ -14,6 +14,5 @@ data class GameSimulationData(
 data class GameSimulationResult(
         val simulationId: String,
         val simulationData: GameSimulationData,
-        val metric: List<String>,
-        val measurements: List<Float>
+        val metrics: Map<String, Float>
 )

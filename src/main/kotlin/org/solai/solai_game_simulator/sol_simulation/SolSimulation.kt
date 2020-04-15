@@ -2,6 +2,7 @@ package org.solai.solai_game_simulator.sol_simulation
 
 import org.solai.solai_game_simulator.Simulation
 import org.solai.solai_game_simulator.character_queue.GameSimulationData
+import org.solai.solai_game_simulator.character_queue.GameSimulationResult
 import sol_game.game.SolGameClient
 import sol_game.game.SolRandomTestPlayer
 
@@ -13,17 +14,17 @@ class SolSimulation(
 
     private lateinit var gameServerSimulation: SolCustomServerSimulation
     private lateinit var clients: List<SolGameClient>
-    private lateinit var metrics: List<SolGameMetric>
+    private lateinit var metrics: List<NamedMetric>
 
     override fun run() {
-        metrics = simulationData.metrics.mapNotNull { ExistingMetrics.getMeasure(it) }
-        metrics.forEach { it.setup() }
+        metrics = simulationData.metrics.mapNotNull { ExistingMetrics.getMetricInstance(it) }
+        metrics.forEach { it.metric.setup() }
 
         gameServerSimulation = SolCustomServerSimulation(
                 simulationData.charactersConfigs,
                 metrics,
                 allowObservers = true,
-                headless = true
+                headless = false
         )
         gameServerSimulation.setup()
         val connectionData = gameServerSimulation.getConnectionData()
@@ -65,6 +66,7 @@ class SolSimulation(
         clients.forEach { it.start() }
 
         while (!gameServerSimulation.gameState.gameEnded) {
+            Thread.sleep(1)
             gameServerSimulation.step()
         }
 
@@ -72,7 +74,11 @@ class SolSimulation(
         gameServerSimulation.terminate()
     }
 
-    override fun calculateMetrics(): Map<String, Float> {
-        return metrics.map { it.metricName to it.getCalculation() }.toMap()
+    override fun calculateResult(): GameSimulationResult {
+        return GameSimulationResult(
+                simulationId,
+                simulationData,
+                metrics = metrics.map { it.name to it.metric.getCalculation() }.toMap()
+        )
     }
 }

@@ -1,17 +1,22 @@
 package org.solai.solai_game_simulator.sol_simulation
 
+import kotlin.reflect.KClass
+import kotlin.reflect.full.createInstance
+
+data class NamedMetric(
+        val name: String,
+        val metric: SolGameMetric
+)
+
 object ExistingMetrics {
 
-    private val existingMetrics = listOf<SolGameMetric>(
-            GameLengthMetric()
+
+    private val metricsByName = mapOf<String, KClass<out SolGameMetric>>(
+            "gameLength" to GameLengthMetric::class
     )
 
-    private val measuresByName = existingMetrics
-            .map { it.metricName to it }
-            .toMap()
-
-    fun getMeasure(measureName: String): SolGameMetric? {
-        return measuresByName[measureName]
+    fun getMetricInstance(measureName: String): NamedMetric? {
+        return metricsByName[measureName]?.let { NamedMetric(measureName, it.createInstance()) }
     }
 
 }

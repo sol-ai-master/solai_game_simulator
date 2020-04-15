@@ -1,37 +1,40 @@
 package org.solai.solai_game_simulator
 
 import mu.KotlinLogging
-import org.solai.solai_game_simulator.character_queue.RedisSimulationQueue
 import org.solai.solai_game_simulator.character_queue.SimulationQueue
+import org.solai.solai_game_simulator.sol_simulation.SolSimulation
 import java.lang.IllegalStateException
 
 
 private val logger = KotlinLogging.logger {}
 
 class SimulationQueueExecuter(
-        val gameServerPool: GameServerPool
+        val simulationsExecutor: SimulationExecutor
 ) : Thread() {
 
     override fun run() {
         super.run()
 
-        val simulationQueue = SimulationQueue.getQueue("localhost") ?: run {
+        val pollSimulationQueue = SimulationQueue.getQueue("localhost") ?: run {
             throw IllegalStateException("Could not connect to simulation queue")
         }
-        val simulator = Simulator()
-
-        simulator.onSimulationResult { result ->
-            simulationQueue.pushSimulationResult(result)
+        val pushSimulationQueue = SimulationQueue.getQueue("localhost") ?: run {
+            throw IllegalStateException("Could not connect to simulation queue")
         }
+
+        simulationsExecutor.onSimulationFinished { simulation ->
+            val result = simulation.calculateResult()
+            pushSimulationQueue.pushSimulationResult(result)
+        }
+
 
         var shouldStop = false
         while (!shouldStop) {
             logger.info { "Waiting for simulation..." }
-            val simulationData = simulationQueue.waitSimulationData(60) ?: continue
+            val simulationData = pollSimulationQueue.waitSimulationData(60) ?: continue
             logger.info { "Simulation present: $simulationData" }
-            simulator.simulate(
-                    gameServerPool,
-                    simulationData
+            simulationsExecutor.executeSimulation(
+                    SolSimulation(simulationData)
             )
         }
     }
