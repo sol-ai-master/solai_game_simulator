@@ -67,22 +67,21 @@ class RedisSimulationQueue : SimulationQueue {
     }
 
     override fun waitSimulationResult(timeout: Int): GameSimulationResult? {
-        val dataList: List<String>? = jedisCall(POLL_SIMULATION_RESULT_LOG_PREFIX) {
+        val res = jedisCall(POLL_SIMULATION_RESULT_LOG_PREFIX) {
             it.brpop(timeout, SIMULATION_RESULT_QUEUE_LABEL)
-        } as List<String>?
+        }
 
-        if (dataList == null || dataList.size != 2) {
+        if (res != null && res is List<*> && res.size == 2 && res[1] is String) {
+            val serializedSimulationResult: String = res[1] as String
+            logger.debug { "$POLL_SIMULATION_RESULT_LOG_PREFIX, raw json: $serializedSimulationResult" }
+            val simulationResult = messageToSimulationResult(serializedSimulationResult)
+            logger.debug { "$POLL_SIMULATION_RESULT_LOG_PREFIX: $simulationResult" }
+            return simulationResult
+        }
+        else {
             logger.info { "$POLL_SIMULATION_RESULT_LOG_PREFIX, timeout expired" }
             return null
         }
-        val serializedSimulationResult: String = dataList[1]
-
-        logger.debug { "$POLL_SIMULATION_RESULT_LOG_PREFIX, raw json: $serializedSimulationResult" }
-
-        val simulationResult = messageToSimulationResult(serializedSimulationResult)
-
-        logger.info { "$POLL_SIMULATION_RESULT_LOG_PREFIX: $simulationResult" }
-        return simulationResult
     }
 
 

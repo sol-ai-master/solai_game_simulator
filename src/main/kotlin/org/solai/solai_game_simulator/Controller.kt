@@ -1,12 +1,7 @@
 package org.solai.solai_game_simulator
 
-import org.solai.solai_game_simulator.character_queue.GameSimulationData
-import org.solai.solai_game_simulator.character_queue.SimulationQueue
-import org.springframework.web.bind.annotation.*
-import sol_engine.network.network_game.game_server.ServerConnectionData
-import sol_game.CharacterConfigLoader
-import java.lang.IllegalStateException
-import java.util.*
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.RestController
 
 
 @RestController()
