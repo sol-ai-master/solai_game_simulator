@@ -10,6 +10,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 
 
+private val redisHost = "redis"
 
 class SimulationQueueExecuter(
         val simulationsMeasureExecutor: SimulationMeasureExecutor
@@ -22,10 +23,10 @@ class SimulationQueueExecuter(
     override fun run() {
         super.run()
 
-        val pollSimulationQueue = SimulationQueue.getQueue("localhost") ?: run {
+        val pollSimulationQueue = SimulationQueue.getQueue(redisHost) ?: run {
             throw IllegalStateException("Could not connect to simulation queue")
         }
-        val pushSimulationQueue = SimulationQueue.getQueue("localhost") ?: run {
+        val pushSimulationQueue = SimulationQueue.getQueue(redisHost) ?: run {
             throw IllegalStateException("Could not connect to simulation queue")
         }
 

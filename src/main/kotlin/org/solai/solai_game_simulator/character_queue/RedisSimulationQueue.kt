@@ -25,7 +25,7 @@ class RedisSimulationQueue : SimulationQueue {
     private val jsonMapper = jacksonObjectMapper()
 
     fun connect(address: String): Boolean {
-        jedis = Jedis(address)
+        jedis = Jedis(address, 6379)
 //        jedis.connect()
         return true //jedis.isConnected
     }
