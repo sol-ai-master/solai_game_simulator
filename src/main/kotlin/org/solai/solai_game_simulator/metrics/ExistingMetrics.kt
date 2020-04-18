@@ -17,11 +17,14 @@ object ExistingMetrics {
 
 
     private val metricsByName = mapOf<String, KClass<out Metric>>(
-            "gameLength" to GameLengthMetric::class
+            "gameLength" to GameLengthMetric::class,
+            "nearDeathFrames" to NearDeathFramesMetric::class
     )
 
     fun getMetricInstance(measureName: String): NamedMetric? {
         return metricsByName[measureName]?.let { NamedMetric(measureName, it.createInstance()) }
     }
+
+    fun getAllMetricNames() = metricsByName.keys.toList()
 
 }

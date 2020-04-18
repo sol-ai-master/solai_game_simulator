@@ -1,13 +1,11 @@
 package org.solai.solai_game_simulator.players
 
 import org.joml.Vector2f
-import sol_engine.ecs.World
 import sol_engine.utils.math.MathF
 import sol_game.core_game.SolActions
 import sol_game.game_state.SolGameState
 import sol_game.game_state.SolGameStateFuncs
 import sol_game.game_state.SolStaticGameState
-import sol_game.player.SolRandomTestPlayer
 
 class RandomPlayer : Player {
     private var moveDirection: Vector2f = Vector2f()

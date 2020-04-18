@@ -54,6 +54,10 @@ class SimulationMeasureExecutor {
         return executingMeasures.keys.toList()
     }
 
+    fun getExecutingMeasures() = executingMeasures.values.toList()
+
+    fun getExecutingMeasure(simulationId: String): SimulationMeasure? = executingMeasures[simulationId]
+
     fun terminate() {
         //        executingSimulations.forEach(sim -> sim.terminate())
         threadExecutor.shutdownNow()

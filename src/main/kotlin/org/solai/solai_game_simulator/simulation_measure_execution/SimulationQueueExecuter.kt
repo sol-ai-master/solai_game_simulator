@@ -19,6 +19,18 @@ class SimulationQueueExecuter(
 
     private val simulationDataById = ConcurrentHashMap<String, GameSimulationData>()
 
+
+    fun simulationMeasureToResult(simulationMeasure: SimulationMeasure): GameSimulationResult? {
+        val metricResults = simulationMeasure.calculateMetrics()
+        val simulationData = simulationDataById[simulationMeasure.simulationId] ?: return null
+
+        return GameSimulationResult(
+                simulationMeasure.simulationId,
+                simulationData,
+                metricResults.map { it.name to it.value }.toMap()
+        )
+    }
+
     override fun run() {
         super.run()
 
@@ -30,19 +42,12 @@ class SimulationQueueExecuter(
         }
 
         simulationsMeasureExecutor.onSimulationMeasureFinished { simulationMeasure ->
-            val metricResults = simulationMeasure.calculateMetrics()
-            val simulationData = simulationDataById.remove(simulationMeasure.simulationId)
-
-            if (simulationData == null) {
-                logger.error { "SimulationData did not exist for finished simulation measure: ${simulationMeasure.simulationId}" }
-                return@onSimulationMeasureFinished
-            }
-
-            pushSimulationQueue.pushSimulationResult(GameSimulationResult(
-                    simulationMeasure.simulationId,
-                    simulationData,
-                    metricResults.map { it.name to it.value }.toMap()
-            ))
+            simulationMeasureToResult(simulationMeasure)
+                    ?.let {
+                        pushSimulationQueue.pushSimulationResult(it)
+                        simulationDataById.remove(it.simulationId)
+                    }
+                    ?: run { logger.error { "SimulationData did not exist for finished simulation measure:${simulationMeasure.simulationId}" } }
         }
 
 
