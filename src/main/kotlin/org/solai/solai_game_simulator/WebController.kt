@@ -1,13 +1,15 @@
 package org.solai.solai_game_simulator
 
+import org.solai.solai_game_simulator.simulation_measure_execution.SimulationMeasureExecutor
+import org.solai.solai_game_simulator.simulation_measure_execution.SimulationQueueExecuter
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
 
 
 @RestController()
-class Controller {
+class WebController {
 
-    private val simulationsExecutor = SimulationExecutor()
+    private val simulationsExecutor = SimulationMeasureExecutor()
     private val simulationQueueExecutor = SimulationQueueExecuter(simulationsExecutor)
 
     init {
@@ -19,7 +21,7 @@ class Controller {
 
     @GetMapping("/runningSimulations")
     fun runningSimulations(): List<String> {
-        return simulationsExecutor.getExecutingSimulationsIds()
+        return simulationsExecutor.getExecutionsSimulationIds()
     }
 
 //    @DeleteMapping("/removeSimulation")

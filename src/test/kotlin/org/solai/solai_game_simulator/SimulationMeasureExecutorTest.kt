@@ -6,44 +6,54 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
+import org.solai.solai_game_simulator.simulation_measure_execution.SimulationMeasure
+import org.solai.solai_game_simulator.simulation_measure_execution.SimulationMeasureExecutor
 import java.util.*
 import java.util.concurrent.ConcurrentLinkedDeque
 
 
-class SimulationExecutorTest {
+class SimulationMeasureExecutorTest {
 
-    lateinit var simulationExecutor: SimulationExecutor
+    lateinit var simulationMeasureExecutor: SimulationMeasureExecutor
 
     @BeforeEach
     fun setUp() {
-        simulationExecutor = SimulationExecutor()
+        simulationMeasureExecutor = SimulationMeasureExecutor()
     }
 
     @AfterEach
     fun tearDown() {
-        simulationExecutor.terminate()
+        simulationMeasureExecutor.terminate()
     }
 
     @Test
     fun testDummySimulation() {
 
-        val finishedSimulations: Deque<Simulation> = ConcurrentLinkedDeque<Simulation>()
+        val finishedSimulations: Deque<SimulationMeasure> = ConcurrentLinkedDeque()
 
 
-        simulationExecutor.onSimulationFinished { simulation ->
+        simulationMeasureExecutor.onSimulationMeasureFinished { simulation ->
             finishedSimulations.addFirst(simulation)
         }
 
-        val dummySims = (0..2)
-                .map { DummySimulation("hei$it") }
-                .onEach { simulationExecutor.executeSimulation(it) }
+        val dummySimMeasures: List<SimulationMeasure> = (0..2)
+                .map {
+                    SimulationMeasure(
+                            "$it",
+                            { _ -> FixedIterationsSimulation(100) },
+                            listOf(),
+                            listOf()
+                    )
+                }
+
+        dummySimMeasures.forEach { simulationMeasureExecutor.execute(it) }
 
         while (finishedSimulations.size < 1) {
             Thread.sleep(100)
         }
 
         assertEquals(3, finishedSimulations.size)
-        dummySims.forEach { assertTrue(finishedSimulations.contains(it)) }
+        dummySimMeasures.forEach { assertTrue(finishedSimulations.contains(it)) }
 
     }
 
