@@ -7,7 +7,8 @@ import sol_game.game_state.SolStaticGameState
 
 
 interface Simulation {
-    fun setup()
+
+    fun setup(headless: Boolean = true)
 
     fun start()
 

@@ -1,4 +1,4 @@
-package org.solai.solai_game_simulator
+package org.solai.solai_game_simulator.web
 
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.servlet.config.annotation.CorsRegistry

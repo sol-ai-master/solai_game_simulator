@@ -10,16 +10,18 @@ class SolSimulation(
         private val characterConfigs: List<CharacterConfig>
 ) : Simulation {
 
-    val solSimulation = SolGameSimulationOffline(
-            charactersConfigs = characterConfigs,
-            graphicsSettings = SolGameSimulationOffline.GraphicsSettings(
-                    headless = false,
-                    graphicalInput = false,
-                    allowGui = false
-            )
-    )
+    private lateinit var solSimulation: SolGameSimulationOffline
 
-    override fun setup() {
+    override fun setup(headless: Boolean) {
+        solSimulation = SolGameSimulationOffline(
+                charactersConfigs = characterConfigs,
+                graphicsSettings = SolGameSimulationOffline.GraphicsSettings(
+                        headless = headless,
+                        graphicalInput = false,
+                        allowGui = false
+                )
+        )
+
         solSimulation.setup()
     }
 

@@ -85,6 +85,7 @@ class RedisSimulationQueue : SimulationQueue {
     }
 
 
+    @Synchronized
     private fun jedisCall(callName: String = "", call: (jedis: Jedis) -> Any?): Any? {
         return try {
             call(jedis)

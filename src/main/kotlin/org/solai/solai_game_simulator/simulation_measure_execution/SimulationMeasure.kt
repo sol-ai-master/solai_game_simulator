@@ -12,7 +12,7 @@ import java.util.*
 
 class SimulationMeasure(
         val simulationId: String,
-        private val simulationFactory: (characters: List<CharacterConfig>) -> Simulation,
+        private val simulationFactory: SimulationFactory,
         val characterConfigs: List<CharacterConfig>,
         private val metricNames: List<String>
 ) : Runnable {
@@ -38,11 +38,9 @@ class SimulationMeasure(
 
     override fun run() {
         val players = listOf(RandomPlayer(), RandomPlayer()).subList(0, characterConfigs.size)
-        val simulation = simulationFactory(characterConfigs)
+        val simulation = simulationFactory.getSimulation(characterConfigs)
 
-        simulation.setup()
         players.forEach { it.onSetup() }
-        metrics.forEach { it.metric.setup() }
 
         executeSimulationWithMetrics(simulation, players, metrics)
 
