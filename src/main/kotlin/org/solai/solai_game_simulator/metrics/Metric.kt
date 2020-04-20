@@ -6,9 +6,9 @@ import sol_game.game_state.SolStaticGameState
 
 interface Metric {
     fun setup() {}
-    fun start(staticGameState: SolStaticGameState, gameState: SolGameState) {}
+    fun start(playersCount: Int, staticGameState: SolStaticGameState, gameState: SolGameState) {}
     fun update(gameState: SolGameState)
     fun end(gameState: SolGameState) {}
 
-    fun calculate(): Float
+    fun calculate(): List<Float>
 }

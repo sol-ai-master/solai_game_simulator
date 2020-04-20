@@ -11,7 +11,7 @@ data class NamedMetric(
 
 data class CalculatedMetric(
         val name: String,
-        val value: Float
+        val values: List<Float>
 )
 
 object ExistingMetrics {
@@ -19,7 +19,8 @@ object ExistingMetrics {
 
     private val metricsByName = ConcurrentHashMap(mapOf(
             "gameLength" to GameLengthMetric::class,
-            "nearDeathFrames" to NearDeathFramesMetric::class
+            "nearDeathFrames" to NearDeathFramesMetric::class,
+            "characterWon" to CharacterWonMetric::class
     ))
 
     fun getMetricInstance(measureName: String): NamedMetric? {

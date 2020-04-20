@@ -37,7 +37,7 @@ class RedisSimulationQueue : SimulationQueue {
     override fun pushSimulationData(simulationData: GameSimulationData) {
         logger.info { "$PUSH_SIMULATION_LOG_PREFIX: $simulationData" }
         val serializedSimulationData = simulationDataToMessage(simulationData)
-        logger.info { "$PUSH_SIMULATION_LOG_PREFIX, raw json: $serializedSimulationData" }
+        logger.debug { "$PUSH_SIMULATION_LOG_PREFIX, raw json: $serializedSimulationData" }
         jedisCall(PUSH_SIMULATION_LOG_PREFIX) { it.lpush(SIMULATION_DATA_QUEUE_LABEL, serializedSimulationData) }
     }
 
@@ -50,7 +50,7 @@ class RedisSimulationQueue : SimulationQueue {
             val serializedSimulationData: String = res[1] as String
             logger.debug { "$POLL_SIMULATION_LOG_PREFIX, raw json: $serializedSimulationData" }
             val simulationData = messageToSimulationData(serializedSimulationData)
-            logger.debug { "$POLL_SIMULATION_LOG_PREFIX: $simulationData" }
+            logger.info { "$POLL_SIMULATION_LOG_PREFIX: $simulationData" }
             return simulationData
         }
         else {
@@ -60,7 +60,7 @@ class RedisSimulationQueue : SimulationQueue {
     }
 
     override fun pushSimulationResult(simulationResult: GameSimulationResult) {
-        logger.debug { "$PUSH_SIMULATION_RESULT_LOG_PREFIX: $simulationResult" }
+        logger.info { "$PUSH_SIMULATION_RESULT_LOG_PREFIX: $simulationResult" }
         val serializedSimulationResult = simulationResultToMessage(simulationResult)
         logger.debug { "$PUSH_SIMULATION_RESULT_LOG_PREFIX, raw: $serializedSimulationResult" }
         jedisCall(PUSH_SIMULATION_LOG_PREFIX) { it.lpush(SIMULATION_RESULT_QUEUE_LABEL, serializedSimulationResult) }
@@ -75,7 +75,7 @@ class RedisSimulationQueue : SimulationQueue {
             val serializedSimulationResult: String = res[1] as String
             logger.debug { "$POLL_SIMULATION_RESULT_LOG_PREFIX, raw json: $serializedSimulationResult" }
             val simulationResult = messageToSimulationResult(serializedSimulationResult)
-            logger.debug { "$POLL_SIMULATION_RESULT_LOG_PREFIX: $simulationResult" }
+            logger.info { "$POLL_SIMULATION_RESULT_LOG_PREFIX: $simulationResult" }
             return simulationResult
         }
         else {

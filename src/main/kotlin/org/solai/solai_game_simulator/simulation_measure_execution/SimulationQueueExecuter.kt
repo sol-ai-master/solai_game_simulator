@@ -28,7 +28,7 @@ class SimulationQueueExecuter(
         return GameSimulationResult(
                 simulationMeasure.simulationId,
                 simulationData,
-                metricResults.map { it.name to it.value }.toMap()
+                metricResults.map { it.name to it.values }.toMap()
         )
     }
 

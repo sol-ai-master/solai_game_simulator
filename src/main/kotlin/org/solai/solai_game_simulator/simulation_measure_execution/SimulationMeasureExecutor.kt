@@ -25,6 +25,8 @@ class SimulationMeasureExecutor {
             super.afterExecute(r, t)
             val simulationMeasure = r as SimulationMeasure
             handleFinishedSimulation(simulationMeasure)
+
+            t?.let { error(t) }
         }
     }
 
@@ -34,6 +36,8 @@ class SimulationMeasureExecutor {
         logger.info { "executing simulation measure: ${simulationMeasure.simulationId}" }
         threadExecutor.execute(simulationMeasure)
         executingMeasures[simulationMeasure.simulationId] = simulationMeasure
+
+        println("active simulations: ${threadExecutor.activeCount}")
     }
 
     private fun handleFinishedSimulation(simulationMeasure: SimulationMeasure) {

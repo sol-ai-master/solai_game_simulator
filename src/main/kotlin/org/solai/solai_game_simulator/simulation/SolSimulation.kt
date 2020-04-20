@@ -37,7 +37,7 @@ class SolSimulation(
     }
 
     override fun isFinished(): Boolean {
-        return getState().gameEnded
+        return getState().gameEnded || solSimulation.isFinished
     }
 
     override fun end() {

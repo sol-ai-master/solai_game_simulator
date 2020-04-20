@@ -8,6 +8,8 @@ import org.solai.solai_game_simulator.players.RandomPlayer
 import org.solai.solai_game_simulator.metrics.ExistingMetrics
 import org.solai.solai_game_simulator.metrics.NamedMetric
 import sol_game.core_game.CharacterConfig
+import sol_game.game_state.SolCharacterState
+import sol_game.game_state.SolGameState
 import java.util.*
 
 class SimulationMeasure(
@@ -56,18 +58,43 @@ class SimulationMeasure(
 
         val staticState = simulation.getStaticState()
         var state = simulation.getState()
-        players.forEachIndexed { index, player -> player.onStart(index, staticState, state) }
-        metrics.forEach { it.metric.start(staticState, state) }
+        var prevState = state
+        var prevPrevState = prevState
+        val playersCount = state.charactersState.size
 
+        players.forEachIndexed { index, player -> player.onStart(index, staticState, state) }
+        metrics.forEach { it.metric.start(playersCount, staticState, state) }
+
+        var i = 0
         while (!simulation.isFinished()) {
             simulation.update()
+            prevPrevState = prevState
+            prevState = state
             state = simulation.getState()
             val inputs = players.mapIndexed { index, player -> player.onUpdate(index, state) }
             metrics.forEach { it.metric.update(state) }
 
             simulation.setInputs(inputs)
+            i++
         }
 
+        val getPrintState = {solState: SolGameState -> mapOf(
+                "gameStarted" to solState.gameStarted,
+                "gameEnded" to solState.gameEnded,
+                "indexWOn" to solState.playerIndexWon,
+                "charStates" to solState.charactersState.map { charState -> mapOf(
+                        "object" to charState.physicalObject,
+                        "vel" to charState.velocity,
+                        "stocks" to charState.stocks,
+                        "damage" to charState.damage
+                ) }
+        )}
+
+        println("end prev prev state: ${getPrintState(prevPrevState)}")
+        println("end prev state: ${getPrintState(prevState)}")
+        println("end state: ${getPrintState(state)}")
+
+        println("simulation ended in $i updates")
         simulation.end()
         players.forEachIndexed { index, player ->  player.onEnd(index, state) }
         metrics.forEach { it.metric.end(state) }

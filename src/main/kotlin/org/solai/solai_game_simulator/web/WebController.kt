@@ -26,7 +26,8 @@ class WebController {
     @GetMapping("/intermediateResult/{simulationId}")
     fun intermediateResult(@PathVariable simulationId: String): GameSimulationResult? {
         val simMeasure = simulationMeasuer.executor.getExecutingMeasure(simulationId)
-        return simMeasure?.let { simulationMeasuer.queueExecutor.simulationMeasureToResult(it) }
+        return simMeasure
+                ?.let { simulationMeasuer.queueExecutor.simulationMeasureToResult(it) }
                 ?: run { null }
     }
 
