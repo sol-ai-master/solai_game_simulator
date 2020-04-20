@@ -1,6 +1,7 @@
 package org.solai.solai_game_simulator.simulation_measure_execution
 
 import mu.KotlinLogging
+import java.lang.IllegalStateException
 import java.util.*
 import java.util.concurrent.*
 import kotlin.collections.LinkedHashMap
@@ -9,7 +10,9 @@ import kotlin.collections.LinkedHashMap
 typealias MeasureFinishedListener = (measure: SimulationMeasure) -> Unit
 
 
-class SimulationMeasureExecutor {
+class SimulationMeasureExecutor(
+        val maxJobs: Int = 8
+) {
     val logger = KotlinLogging.logger {  }
 
     private val executingMeasures: MutableMap<String, SimulationMeasure> = Collections.synchronizedMap(LinkedHashMap())
@@ -32,12 +35,14 @@ class SimulationMeasureExecutor {
 
     private var measureFinishedListener: MeasureFinishedListener = {}
 
-    fun execute(simulationMeasure: SimulationMeasure) {
-        logger.info { "executing simulation measure: ${simulationMeasure.simulationId}" }
-        threadExecutor.execute(simulationMeasure)
-        executingMeasures[simulationMeasure.simulationId] = simulationMeasure
+    fun isFull(): Boolean = getExecutionsCount() == maxJobs
 
-        println("active simulations: ${threadExecutor.activeCount}")
+    fun execute(simulationMeasure: SimulationMeasure) {
+        if (isFull()) throw IllegalStateException("full, check if full before executing")
+
+        logger.info { "executing simulation measure: ${simulationMeasure.simulationId}" }
+        executingMeasures[simulationMeasure.simulationId] = simulationMeasure
+        threadExecutor.execute(simulationMeasure)
     }
 
     private fun handleFinishedSimulation(simulationMeasure: SimulationMeasure) {

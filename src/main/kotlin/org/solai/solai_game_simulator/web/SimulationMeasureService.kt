@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service
 class SimulationMeasureService {
 
     final val simulationFactory = SimulationFactory()
-    final val executor = SimulationMeasureExecutor()
+    final val executor = SimulationMeasureExecutor(maxJobs = 50)
     final val queueExecutor = SimulationQueueExecuter(executor, simulationFactory)
 
     init {

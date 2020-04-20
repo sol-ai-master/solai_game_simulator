@@ -39,6 +39,14 @@ class WebController {
         }
     }
 
+    @PostMapping("/simulationUpdateDelay")
+    fun simulationUpdateDelay(@RequestBody updateDelayMillis: Float): Float {
+        return simulationMeasuer.queueExecutor.let {
+            it.simulationUpdateDelayMillis = updateDelayMillis
+            it.simulationUpdateDelayMillis
+        }
+    }
+
 //    @DeleteMapping("/removeSimulation")
 //    fun removeSimulation(): Boolean {
 //

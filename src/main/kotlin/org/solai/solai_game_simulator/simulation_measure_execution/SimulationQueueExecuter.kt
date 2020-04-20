@@ -4,7 +4,6 @@ import mu.KotlinLogging
 import org.solai.solai_game_simulator.character_queue.GameSimulationData
 import org.solai.solai_game_simulator.character_queue.GameSimulationResult
 import org.solai.solai_game_simulator.character_queue.SimulationQueue
-import org.solai.solai_game_simulator.simulation.SolSimulation
 import java.lang.IllegalStateException
 import java.util.concurrent.ConcurrentHashMap
 
@@ -19,6 +18,10 @@ class SimulationQueueExecuter(
     val logger = KotlinLogging.logger {}
 
     private val simulationDataById = ConcurrentHashMap<String, GameSimulationData>()
+
+    var simulationUpdateDelayMillis: Float = 0f
+            @Synchronized get
+            @Synchronized set
 
 
     fun simulationMeasureToResult(simulationMeasure: SimulationMeasure): GameSimulationResult? {
@@ -54,6 +57,11 @@ class SimulationQueueExecuter(
 
         var shouldStop = false
         while (!shouldStop) {
+            if (simulationsMeasureExecutor.isFull()) {
+                sleep(10)
+                continue
+            }
+
             logger.info { "Waiting for simulation..." }
             val simulationData = pollSimulationQueue.waitSimulationData(60) ?: continue
             logger.info { "Simulation present: $simulationData" }
@@ -65,7 +73,8 @@ class SimulationQueueExecuter(
                     simulationData.simulationId,
                     simulationFactory = simulationFactory,
                     characterConfigs = simulationData.charactersConfigs,
-                    metricNames = simulationData.metrics
+                    metricNames = simulationData.metrics,
+                    updateDelayMillis = simulationUpdateDelayMillis
             )
 
             simulationsMeasureExecutor.execute(simulationMeasure)
