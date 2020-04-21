@@ -20,7 +20,8 @@ object ExistingMetrics {
     private val metricsByName = ConcurrentHashMap(mapOf(
             "gameLength" to GameLengthMetric::class,
             "nearDeathFrames" to NearDeathFramesMetric::class,
-            "characterWon" to CharacterWonMetric::class
+            "characterWon" to CharacterWonMetric::class,
+            "stageCoverage" to StageCoverageMetric::class
     ))
 
     fun getMetricInstance(measureName: String): NamedMetric? {

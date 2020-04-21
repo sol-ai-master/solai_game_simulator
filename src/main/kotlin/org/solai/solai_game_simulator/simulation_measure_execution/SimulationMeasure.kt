@@ -8,8 +8,6 @@ import org.solai.solai_game_simulator.players.RandomPlayer
 import org.solai.solai_game_simulator.metrics.ExistingMetrics
 import org.solai.solai_game_simulator.metrics.NamedMetric
 import sol_game.core_game.CharacterConfig
-import sol_game.game_state.SolCharacterState
-import sol_game.game_state.SolGameState
 import java.util.*
 import kotlin.system.measureTimeMillis
 

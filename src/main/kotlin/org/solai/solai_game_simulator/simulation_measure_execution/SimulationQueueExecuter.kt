@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
 
 class SimulationQueueExecuter(
         val simulationsMeasureExecutor: SimulationMeasureExecutor,
-        val simulationFactory: SimulationFactory
+        val simulationFactory: SolSimulationFactory
 ) : Thread() {
 
     val logger = KotlinLogging.logger {}

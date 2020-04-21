@@ -11,8 +11,7 @@ class FixedIterationsSimulation(
 
     private var currentIterations = 0
 
-    override fun setup() {
-    }
+    override fun setup(headless: Boolean){}
 
     override fun start() {}
 

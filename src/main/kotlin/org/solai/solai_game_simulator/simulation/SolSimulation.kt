@@ -18,7 +18,7 @@ class SolSimulation(
                 graphicsSettings = SolGameSimulationOffline.GraphicsSettings(
                         headless = headless,
                         graphicalInput = false,
-                        allowGui = false
+                        allowGui = true
                 )
         )
 
