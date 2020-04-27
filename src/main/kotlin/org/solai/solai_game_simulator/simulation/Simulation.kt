@@ -19,7 +19,6 @@ interface Simulation {
     fun end()
 
     fun getState(): SolGameState
-    fun getStaticState(): SolStaticGameState
 
     fun setInputs(inputs: List<SolActions>)
 }

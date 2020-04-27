@@ -63,7 +63,8 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "junit-vintage-engine")
     }
-    implementation("com.github.sol-ai:sol_champ:-SNAPSHOT")
+    implementation("com.github.sol-ai:sol_champ/sol_engine:-SNAPSHOT")
+    implementation("com.github.sol-ai:sol_champ/sol_game:-SNAPSHOT")
 }
 
 tasks.withType<Test> {

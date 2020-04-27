@@ -8,7 +8,7 @@ class CharacterWonMetric : Metric {
     private var playersCount: Int = 0
     private var winnerIndex = -1
 
-    override fun start(playersCount: Int, staticGameState: SolStaticGameState, gameState: SolGameState) {
+    override fun start(playersCount: Int, gameState: SolGameState) {
         this.playersCount = playersCount
     }
 

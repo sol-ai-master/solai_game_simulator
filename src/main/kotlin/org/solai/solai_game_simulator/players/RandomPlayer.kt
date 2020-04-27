@@ -2,6 +2,7 @@ package org.solai.solai_game_simulator.players
 
 import org.joml.Vector2f
 import sol_engine.utils.math.MathF
+import sol_game.core_game.CharacterConfig
 import sol_game.core_game.SolActions
 import sol_game.game_state.SolGameState
 import sol_game.game_state.SolGameStateFuncs
@@ -10,18 +11,15 @@ import sol_game.game_state.SolStaticGameState
 class RandomPlayer : Player {
     private var moveDirection: Vector2f = Vector2f()
 
-    private lateinit var staticGameState: SolStaticGameState
-
     override fun onSetup() {
 
     }
 
-    override fun onStart(controlledCharacterIndex: Int, staticGameState: SolStaticGameState, gameState: SolGameState) {
-        this.staticGameState = staticGameState
+    override fun onStart(controlledCharacterIndex: Int, gameState: SolGameState, charactersConfig: List<CharacterConfig>) {
         moveDirection = Vector2f(MathF.randRange(-1f, 1f), MathF.randRange(-1f, 1f))
     }
 
-    override fun onUpdate(controlledCharacterIndex: Int, gameState: SolGameState): SolActions {
+    override fun onUpdate(controlledCharacterIndex: Int, gameState: SolGameState, charactersConfig: List<CharacterConfig>): SolActions {
         val myChar = gameState.charactersState[controlledCharacterIndex]
         val otherChar = gameState.charactersState.getOrNull((controlledCharacterIndex + 1) % 2)
 
@@ -35,7 +33,7 @@ class RandomPlayer : Player {
 
         moveDirection.add(MathF.randRange(-0.5f, 0.5f), MathF.randRange(-0.5f, 0.5f))
 
-        val closestHole = SolGameStateFuncs.closestHole(myChar.physicalObject, staticGameState)
+        val closestHole = SolGameStateFuncs.closestHole(myChar.physicalObject, gameState.staticGameState)
         if (closestHole.lengthSquared() != 0f) {
             val holeDistanceLinearRatio = (100f / closestHole.length().coerceAtLeast(0.01f))
             val holeDistanceExpRatio = holeDistanceLinearRatio * holeDistanceLinearRatio
@@ -58,7 +56,7 @@ class RandomPlayer : Player {
         )
     }
 
-    override fun onEnd(controlledCharacterIndex: Int, gameState: SolGameState) {
+    override fun onEnd(controlledCharacterIndex: Int, gameState: SolGameState, charactersConfig: List<CharacterConfig>) {
     }
 
 }

@@ -8,20 +8,18 @@ class NearDeathFramesMetric : Metric {
 
     // near death frames per player
     private var nearDeathFrames: MutableList<Int> = mutableListOf()
-    private lateinit var staticGameState: SolStaticGameState
     private var playersCount: Int = 0
 
     private val DANGER_DISTANCE = 100f
 
-    override fun start(playersCount: Int, staticGameState: SolStaticGameState, gameState: SolGameState) {
+    override fun start(playersCount: Int, gameState: SolGameState) {
         this.playersCount = playersCount
-        this.staticGameState = staticGameState
         nearDeathFrames = (0 until playersCount).map { 0 }.toMutableList()
     }
 
     override fun update(gameState: SolGameState) {
         gameState.charactersState
-                .map { SolGameStateFuncs.closestHole(it.physicalObject, staticGameState).length() }
+                .map { SolGameStateFuncs.closestHole(it.physicalObject, gameState.staticGameState).length() }
                 .map { distanceFromHole -> distanceFromHole <= DANGER_DISTANCE }
                 .forEachIndexed { index, nearDeath -> if (nearDeath) nearDeathFrames?.let { it[index]++ } }
     }

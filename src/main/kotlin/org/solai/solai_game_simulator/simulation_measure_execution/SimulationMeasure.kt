@@ -7,6 +7,8 @@ import org.solai.solai_game_simulator.players.Player
 import org.solai.solai_game_simulator.players.RandomPlayer
 import org.solai.solai_game_simulator.metrics.ExistingMetrics
 import org.solai.solai_game_simulator.metrics.NamedMetric
+import org.solai.solai_game_simulator.players.RandomAttackRulePlayer
+import org.solai.solai_game_simulator.players.RulePlayer
 import sol_game.core_game.CharacterConfig
 import java.util.*
 import kotlin.system.measureTimeMillis
@@ -39,36 +41,36 @@ class SimulationMeasure(
     }
 
     override fun run() {
-        val players = listOf(RandomPlayer(), RandomPlayer()).subList(0, characterConfigs.size)
+        val players = listOf(RulePlayer(), RulePlayer()).subList(0, characterConfigs.size)
         val simulation = simulationFactory.getSimulation(characterConfigs)
 
         players.forEach { it.onSetup() }
 
-        executeSimulationWithMetrics(simulation, players, metrics)
+        executeSimulationWithMetrics(simulation, characterConfigs, players, metrics)
 
         // metrics are updated and ready to be fetched
     }
 
     private fun executeSimulationWithMetrics(
             simulation: Simulation,
+            charactersConfig: List<CharacterConfig>,
             players: List<Player>,
             metrics: List<NamedMetric>
     ) {
         simulation.start()
 
-        val staticState = simulation.getStaticState()
         var state = simulation.getState()
         val playersCount = state.charactersState.size
 
-        players.forEachIndexed { index, player -> player.onStart(index, staticState, state) }
-        metrics.forEach { it.metric.start(playersCount, staticState, state) }
+        players.forEachIndexed { index, player -> player.onStart(index, state, charactersConfig) }
+        metrics.forEach { it.metric.start(playersCount, state) }
 
 
         while (!simulation.isFinished()) {
             val updateTime = measureTimeMillis {
                 simulation.update()
                 state = simulation.getState()
-                val inputs = players.mapIndexed { index, player -> player.onUpdate(index, state) }
+                val inputs = players.mapIndexed { index, player -> player.onUpdate(index, state, charactersConfig) }
                 metrics.forEach { it.metric.update(state) }
 
                 simulation.setInputs(inputs)
@@ -81,7 +83,7 @@ class SimulationMeasure(
         }
 
         simulation.end()
-        players.forEachIndexed { index, player ->  player.onEnd(index, state) }
+        players.forEachIndexed { index, player ->  player.onEnd(index, state, charactersConfig) }
         metrics.forEach { it.metric.end(state) }
     }
 

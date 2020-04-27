@@ -48,10 +48,6 @@ class SolSimulation(
         return solSimulation.retrieveGameState()
     }
 
-    override fun getStaticState(): SolStaticGameState {
-        return solSimulation.retrieveStaticGameState()
-    }
-
     override fun setInputs(inputs: List<SolActions>) {
         inputs.forEachIndexed { index, input -> solSimulation.setInputs(index, input) }
     }

@@ -9,7 +9,7 @@ class GameLengthMetric : Metric {
     private var playersCount: Int = 0
 
 
-    override fun start(playersCount: Int, staticGameState: SolStaticGameState, gameState: SolGameState) {
+    override fun start(playersCount: Int, gameState: SolGameState) {
         this.playersCount = playersCount
     }
 
