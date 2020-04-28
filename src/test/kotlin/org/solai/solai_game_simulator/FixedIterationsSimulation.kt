@@ -1,6 +1,8 @@
 package org.solai.solai_game_simulator
 
+import org.joml.Vector2f
 import org.solai.solai_game_simulator.simulation.Simulation
+import sol_engine.ecs.World
 import sol_game.core_game.SolActions
 import sol_game.game_state.SolGameState
 import sol_game.game_state.SolStaticGameState
@@ -26,13 +28,15 @@ class FixedIterationsSimulation(
     override fun end() {}
 
     override fun getState(): SolGameState {
-        return SolGameState(true, false, -1, listOf())
+        return SolGameState(
+                gameStarted = true,
+                gameEnded = false,
+                playerIndexWon = -1,
+                staticGameState = SolStaticGameState(Vector2f(100f, 100f), listOf(), listOf()),
+                charactersState = listOf(),
+                world = World()
+        )
     }
-
-    override fun getStaticState(): SolStaticGameState {
-        return SolStaticGameState(listOf(), listOf())
-    }
-
     override fun setInputs(inputs: List<SolActions>) {}
 
 }

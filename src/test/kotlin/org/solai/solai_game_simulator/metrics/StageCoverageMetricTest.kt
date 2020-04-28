@@ -8,6 +8,7 @@ import sol_game.game_state.SolGameState
 import sol_game.game_state.SolStaticGameState
 import java.lang.IllegalArgumentException
 import org.junit.jupiter.api.Assertions.*
+import sol_engine.ecs.World
 
 
 class StageCoverageMetricTest {
@@ -21,15 +22,20 @@ class StageCoverageMetricTest {
                     true,
                     false,
                     -1,
-                    positions.map { position -> SolCharacterState(CircleObjectState(position, 1f)) }
-            )}
+                    staticGameState = SolStaticGameState(
+                            worldSize = worldSize,
+                            walls = listOf(),
+                            holes = listOf()
+                    ),
+                    charactersState = positions.map { position -> SolCharacterState(CircleObjectState(position, 1f)) },
+                    world = World()
+            )
+        }
 
-        val staticGameState = SolStaticGameState(listOf(), listOf())
         var gameState = solGameStateWithPositions(positions[0])
 
         val bcMetric = StageCoverageMetric()
-        bcMetric.worldSize = worldSize
-        bcMetric.start(positions[0].size, staticGameState, gameState)
+        bcMetric.start(positions[0].size, gameState)
 
         positions.forEach {
             gameState = solGameStateWithPositions(it)

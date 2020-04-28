@@ -41,9 +41,10 @@ class StageCoverageMetric : Metric {
     var boardVisitsPerCharacter = listOf<DiscreteBoardVisits>()
         private set
 
-    var worldSize = Vector2f(1600f * 1.2f, 900f * 1.2f)
+    var worldSize = Vector2f()
 
     override fun start(playersCount: Int, gameState: SolGameState) {
+        worldSize = Vector2f(gameState.staticGameState.worldSize)
         boardVisitsPerCharacter = (0 until playersCount).map { DiscreteBoardVisits(worldSize) }
     }
 

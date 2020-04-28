@@ -1,6 +1,7 @@
 package org.solai.solai_game_simulator.players
 
 import org.joml.Vector2f
+import org.solai.solai_game_simulator.MathFuncs
 import sol_engine.utils.math.MathF
 import sol_game.core_game.AbilityConfig
 import sol_game.core_game.CharacterConfig
@@ -26,11 +27,6 @@ typealias Rule = (
 
 object PlayerRules {
 
-    // should be 1 at domainMin and 0 at domainMax
-    private fun linearBetween(valueZero: Float, valueOne: Float, value: Float): Float {
-        return ((1 / (valueOne - valueZero)) * (value - valueZero)).coerceIn(0f, 1f)
-    }
-
     fun createAvoidHolesRule(maxDistance: Float = 500f, minDistance: Float = 100f): Rule {
         val avoidHolesRule: Rule = { myChar, otherChar, staticState, _, _ ->
 
@@ -55,7 +51,7 @@ object PlayerRules {
             { myChar, otherChar, staticState, _, _ ->
                 val distToOtherChar = SolGameStateFuncs.distanceOuter(myChar.physicalObject, otherChar.physicalObject)
                 val moveDir = distToOtherChar
-                val urgency = linearBetween(0f, maxDistance, distToOtherChar.length())
+                val urgency = MathFuncs.linearBetween(0f, maxDistance, distToOtherChar.length())
                 RuleOutput(urgency, moveDir, listOf(false, false, false))
             }
 
@@ -90,7 +86,7 @@ object PlayerRules {
         val fuzzyAbilities = abilitiesInRange.map { if (MathF.random() < 0.01) !it else it }
         val anyAbilities = fuzzyAbilities.any { it }
         val shouldAttack = anyAbilities && MathF.random() > 0.9f
-        val urgency = linearBetween (2000f, 100f, distToChar)
+        val urgency = MathFuncs.linearBetween (2000f, 100f, distToChar)
 
         RuleOutput(
                 urgency,
@@ -101,7 +97,7 @@ object PlayerRules {
     fun createRetreatRule(minDistance: Float, maxDistance: Float): Rule = { myChar, otherChar, staticState, _, _ ->
         val distToOtherChar = SolGameStateFuncs.distanceOuter(myChar.physicalObject, otherChar.physicalObject)
         val moveDir = distToOtherChar.negate(Vector2f())
-        val urgency = linearBetween(maxDistance, minDistance, distToOtherChar.length())
+        val urgency = MathFuncs.linearBetween(maxDistance, minDistance, distToOtherChar.length())
         RuleOutput(urgency, moveDir)
     }
 
