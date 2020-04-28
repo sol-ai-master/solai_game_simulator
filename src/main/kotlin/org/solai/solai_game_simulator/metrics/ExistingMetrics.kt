@@ -21,7 +21,9 @@ object ExistingMetrics {
             "gameLength" to GameLengthMetric::class,
             "nearDeathFrames" to NearDeathFramesMetric::class,
             "characterWon" to CharacterWonMetric::class,
-            "stageCoverage" to StageCoverageMetric::class
+            "stageCoverage" to StageCoverageMetric::class,
+            "leadChange" to LeadChangeMetric::class,
+            "accumulatedStateEvaluations" to StateEvaluationsAccumulatedMetric::class
     ))
 
     fun getMetricInstance(measureName: String): NamedMetric? {
