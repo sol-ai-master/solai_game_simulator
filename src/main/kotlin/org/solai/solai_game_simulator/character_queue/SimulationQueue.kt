@@ -9,9 +9,9 @@ import redis.clients.jedis.Jedis
 interface SimulationQueue {
 
     companion object {
-        fun getQueue(address: String): SimulationQueue? {
+        fun getQueue(address: String, port: Int = -1): SimulationQueue? {
             val simulationQueue = RedisSimulationQueue()
-            val connected = simulationQueue.connect(address)
+            val connected = simulationQueue.connect(address, port)
             return if (connected) simulationQueue else null
         }
     }

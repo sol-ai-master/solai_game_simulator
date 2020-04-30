@@ -45,6 +45,7 @@ dependencies {
     // Use the Kotlin JUnit integration.
 //    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
 
+    implementation("com.xenomachina:kotlin-argparser:2.0.7")
 
     // Use the Kotlin JDK 8 standard library.
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")

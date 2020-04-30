@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.*
 class WebController {
 
     @Autowired
-    lateinit var simulationMeasuer: SimulationMeasureService
+    lateinit var simulationMeasurer: SimulationMeasureService
 
     @GetMapping("/hello")
     fun hello() = "hello"
 
     @GetMapping("/runningSimulations")
     fun runningSimulations(): List<String> {
-        return simulationMeasuer.executor.getExecutionsSimulationIds()
+        return simulationMeasurer.simulator.executor.getExecutionsSimulationIds()
     }
 
     @GetMapping("/existingMetrics")
@@ -25,15 +25,15 @@ class WebController {
 
     @GetMapping("/intermediateResult/{simulationId}")
     fun intermediateResult(@PathVariable simulationId: String): GameSimulationResult? {
-        val simMeasure = simulationMeasuer.executor.getExecutingMeasure(simulationId)
+        val simMeasure = simulationMeasurer.simulator.executor.getExecutingMeasure(simulationId)
         return simMeasure
-                ?.let { simulationMeasuer.queueExecutor.simulationMeasureToResult(it) }
+                ?.let { simulationMeasurer.simulator.queueExecutor.simulationMeasureToResult(it) }
                 ?: run { null }
     }
 
     @PostMapping("/headlessSimulations")
     fun headlessSimulations(@RequestBody headless: Boolean): Boolean {
-        return simulationMeasuer.simulationFactory.let {
+        return simulationMeasurer.simulator.simulationFactory.let {
             it.headless = headless
             it.headless
         }
@@ -41,7 +41,7 @@ class WebController {
 
     @PostMapping("/simulationUpdateDelay")
     fun simulationUpdateDelay(@RequestBody updateDelayMillis: Float): Float {
-        return simulationMeasuer.queueExecutor.let {
+        return simulationMeasurer.simulator.queueExecutor.let {
             it.simulationUpdateDelayMillis = updateDelayMillis
             it.simulationUpdateDelayMillis
         }

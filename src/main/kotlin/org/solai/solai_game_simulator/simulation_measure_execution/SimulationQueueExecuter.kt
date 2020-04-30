@@ -12,7 +12,9 @@ import java.util.concurrent.ConcurrentHashMap
 
 class SimulationQueueExecuter(
         val simulationsMeasureExecutor: SimulationMeasureExecutor,
-        val simulationFactory: SolSimulationFactory
+        val simulationFactory: SolSimulationFactory,
+        val queueAddress: String,
+        val queuePort: Int
 ) : Thread() {
 
     val logger = KotlinLogging.logger {}
@@ -38,10 +40,10 @@ class SimulationQueueExecuter(
     override fun run() {
         super.run()
 
-        val pollSimulationQueue = SimulationQueue.getQueue("localhost") ?: run {
+        val pollSimulationQueue = SimulationQueue.getQueue(queueAddress, queuePort) ?: run {
             throw IllegalStateException("Could not connect to simulation queue")
         }
-        val pushSimulationQueue = SimulationQueue.getQueue("localhost") ?: run {
+        val pushSimulationQueue = SimulationQueue.getQueue(queueAddress, queuePort) ?: run {
             throw IllegalStateException("Could not connect to simulation queue")
         }
 
