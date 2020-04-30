@@ -18,6 +18,7 @@ class SimulationMeasure(
         private val simulationFactory: SimulationFactory,
         val characterConfigs: List<CharacterConfig>,
         private val metricNames: List<String>,
+        val maxSimulationUpdates: Int = 54000,  // 15 minutes at 60 updates per second
         private val updateDelayMillis: Float = 0f
 ) : Runnable {
     val logger = KotlinLogging.logger {  }
@@ -46,7 +47,7 @@ class SimulationMeasure(
 
         players.forEach { it.onSetup() }
 
-        executeSimulationWithMetrics(simulation, characterConfigs, players, metrics)
+        executeSimulationWithMetrics(simulation, characterConfigs, players, metrics, maxSimulationUpdates)
 
         // metrics are updated and ready to be fetched
     }
@@ -55,7 +56,8 @@ class SimulationMeasure(
             simulation: Simulation,
             charactersConfig: List<CharacterConfig>,
             players: List<Player>,
-            metrics: List<NamedMetric>
+            metrics: List<NamedMetric>,
+            maxUpdates: Int
     ) {
         simulation.start()
 
@@ -65,8 +67,8 @@ class SimulationMeasure(
         players.forEachIndexed { index, player -> player.onStart(index, state, charactersConfig) }
         metrics.forEach { it.metric.start(playersCount, state) }
 
-
-        while (!simulation.isFinished()) {
+        var updateCount = 0
+        while (updateCount++ < maxUpdates && !simulation.isFinished()) {
             val updateTime = measureTimeMillis {
                 simulation.update()
                 state = simulation.getState()

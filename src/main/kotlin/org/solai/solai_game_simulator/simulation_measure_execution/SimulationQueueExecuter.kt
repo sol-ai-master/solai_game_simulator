@@ -14,7 +14,8 @@ class SimulationQueueExecuter(
         val simulationsMeasureExecutor: SimulationMeasureExecutor,
         val simulationFactory: SolSimulationFactory,
         val queueAddress: String,
-        val queuePort: Int
+        val queuePort: Int,
+        val maxSimulationUpdates: Int
 ) : Thread() {
 
     val logger = KotlinLogging.logger {}
@@ -76,6 +77,7 @@ class SimulationQueueExecuter(
                     simulationFactory = simulationFactory,
                     characterConfigs = simulationData.charactersConfigs,
                     metricNames = simulationData.metrics,
+                    maxSimulationUpdates = maxSimulationUpdates,
                     updateDelayMillis = simulationUpdateDelayMillis
             )
 

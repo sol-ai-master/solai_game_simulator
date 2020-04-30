@@ -24,10 +24,17 @@ class SimulatorArgParser(parser: ArgParser) {
     ) {toInt()}
             .default(50)
 
+    val maxSimulationUpdates by parser.storing(
+            help = "Maximum number of updates for a single simulation, default=54000 (15 minutes)"
+    ) {toInt()}
+            .default(50000)
+
+
     fun toSimulatorConfig() = SimulatorConfig(
             queueAddress = queueAddress,
             queuePort = queuePort,
             headlessSimulations = headlessSimulations,
-            maxParallelJobs = maxParallelJobs
+            maxParallelJobs = maxParallelJobs,
+            maxSimulationUpdates = maxSimulationUpdates
     )
 }

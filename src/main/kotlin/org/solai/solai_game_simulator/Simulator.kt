@@ -8,7 +8,8 @@ data class SimulatorConfig(
         val queueAddress: String = "localhost",
         val queuePort: Int = -1,  // default port
         val headlessSimulations: Boolean = true,
-        val maxParallelJobs: Int = 50
+        val maxParallelJobs: Int = 50,
+        val maxSimulationUpdates: Int = 54000
 )
 
 class Simulator(
@@ -16,7 +17,13 @@ class Simulator(
 ) {
     val simulationFactory = SolSimulationFactory(headless = config.headlessSimulations)
     val executor = SimulationMeasureExecutor(maxJobs = config.maxParallelJobs)
-    val queueExecutor = SimulationQueueExecuter(executor, simulationFactory, config.queueAddress, config.queuePort)
+    val queueExecutor = SimulationQueueExecuter(
+            executor,
+            simulationFactory,
+            config.queueAddress,
+            config.queuePort,
+            maxSimulationUpdates = config.maxSimulationUpdates
+    )
 
     fun start() {
         queueExecutor.start()
