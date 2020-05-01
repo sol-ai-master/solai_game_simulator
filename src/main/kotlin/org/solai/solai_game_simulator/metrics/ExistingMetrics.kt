@@ -1,7 +1,7 @@
 package org.solai.solai_game_simulator.metrics
 
+import org.solai.solai_game_simulator.simulator_core.Metric
 import java.util.concurrent.ConcurrentHashMap
-import kotlin.reflect.KClass
 import kotlin.reflect.full.createInstance
 
 data class NamedMetric(

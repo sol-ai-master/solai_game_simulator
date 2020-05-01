@@ -2,6 +2,7 @@ package org.solai.solai_game_simulator
 
 import com.xenomachina.argparser.ArgParser
 import com.xenomachina.argparser.default
+import org.solai.solai_game_simulator.simulator_core.SimulatorConfig
 
 class SimulatorArgParser(parser: ArgParser) {
     val queueAddress by parser.storing(

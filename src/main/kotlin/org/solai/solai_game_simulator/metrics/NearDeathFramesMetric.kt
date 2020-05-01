@@ -1,8 +1,8 @@
 package org.solai.solai_game_simulator.metrics
 
+import org.solai.solai_game_simulator.simulator_core.Metric
 import sol_game.game_state.SolGameState
 import sol_game.game_state.SolGameStateFuncs
-import sol_game.game_state.SolStaticGameState
 
 class NearDeathFramesMetric : Metric {
 

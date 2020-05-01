@@ -2,6 +2,7 @@ package org.solai.solai_game_simulator.metrics
 
 import mu.KotlinLogging
 import org.junit.jupiter.api.Test
+import org.solai.solai_game_simulator.metrics.helpers.StateEvaluation
 import org.solai.solai_game_simulator.players.RulePlayer
 import org.solai.solai_game_simulator.simulation.SolSimulation
 import sol_game.CharacterConfigLoader

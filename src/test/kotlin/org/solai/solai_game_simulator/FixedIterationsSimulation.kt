@@ -1,7 +1,7 @@
 package org.solai.solai_game_simulator
 
 import org.joml.Vector2f
-import org.solai.solai_game_simulator.simulation.Simulation
+import org.solai.solai_game_simulator.simulator_core.Simulation
 import sol_engine.ecs.World
 import sol_game.core_game.SolActions
 import sol_game.game_state.SolGameState

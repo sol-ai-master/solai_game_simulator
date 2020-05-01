@@ -6,7 +6,7 @@ import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
-import org.solai.solai_game_simulator.simulation.Simulation
+import org.solai.solai_game_simulator.simulator_core.Simulation
 import org.solai.solai_game_simulator.simulation_measure_execution.SimulationFactory
 import org.solai.solai_game_simulator.simulation_measure_execution.SimulationMeasure
 import org.solai.solai_game_simulator.simulation_measure_execution.SimulationMeasureExecutor

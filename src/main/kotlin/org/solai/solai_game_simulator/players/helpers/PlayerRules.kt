@@ -1,4 +1,4 @@
-package org.solai.solai_game_simulator.players
+package org.solai.solai_game_simulator.players.helpers
 
 import org.joml.Vector2f
 import org.solai.solai_game_simulator.MathFuncs
@@ -8,7 +8,6 @@ import sol_game.core_game.CharacterConfig
 import sol_game.game_state.SolCharacterState
 import sol_game.game_state.SolGameStateFuncs
 import sol_game.game_state.SolStaticGameState
-import kotlin.math.absoluteValue
 
 
 data class RuleOutput(

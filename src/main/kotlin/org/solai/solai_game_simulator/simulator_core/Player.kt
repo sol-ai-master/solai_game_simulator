@@ -1,4 +1,4 @@
-package org.solai.solai_game_simulator.players
+package org.solai.solai_game_simulator.simulator_core
 
 import sol_engine.ecs.World
 import sol_game.core_game.CharacterConfig

@@ -1,4 +1,4 @@
-package org.solai.solai_game_simulator.players
+package org.solai.solai_game_simulator.players.helpers
 
 import org.joml.Vector2f
 import sol_engine.utils.math.MathF

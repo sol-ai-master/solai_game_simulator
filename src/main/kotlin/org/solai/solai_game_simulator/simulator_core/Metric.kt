@@ -1,4 +1,4 @@
-package org.solai.solai_game_simulator.metrics
+package org.solai.solai_game_simulator.simulator_core
 
 import sol_game.game_state.SolGameState
 import sol_game.game_state.SolStaticGameState

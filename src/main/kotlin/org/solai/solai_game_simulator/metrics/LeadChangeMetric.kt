@@ -1,5 +1,7 @@
 package org.solai.solai_game_simulator.metrics
 
+import org.solai.solai_game_simulator.metrics.helpers.StateEvaluation
+import org.solai.solai_game_simulator.simulator_core.Metric
 import sol_game.game_state.SolGameState
 
 class LeadChangeMetric : Metric {

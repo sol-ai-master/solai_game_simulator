@@ -1,7 +1,6 @@
-package org.solai.solai_game_simulator.players
+package org.solai.solai_game_simulator.players.helpers
 
 import org.joml.Vector2f
-import sol_engine.ecs.World
 import sol_game.core_game.CharacterConfig
 import sol_game.core_game.SolActions
 import sol_game.game_state.SolGameState

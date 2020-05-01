@@ -1,4 +1,4 @@
-package org.solai.solai_game_simulator
+package org.solai.solai_game_simulator.simulator_core
 
 import org.solai.solai_game_simulator.simulation_measure_execution.SimulationMeasureExecutor
 import org.solai.solai_game_simulator.simulation_measure_execution.SimulationQueueExecuter

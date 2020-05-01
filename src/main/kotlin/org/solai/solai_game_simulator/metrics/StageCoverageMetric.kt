@@ -2,8 +2,8 @@ package org.solai.solai_game_simulator.metrics
 
 import org.joml.Vector2f
 import org.joml.Vector2i
+import org.solai.solai_game_simulator.simulator_core.Metric
 import sol_game.game_state.SolGameState
-import sol_game.game_state.SolStaticGameState
 
 class StageCoverageMetric : Metric {
 

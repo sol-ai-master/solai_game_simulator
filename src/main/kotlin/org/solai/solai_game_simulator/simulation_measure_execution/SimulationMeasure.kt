@@ -1,13 +1,11 @@
 package org.solai.solai_game_simulator.simulation_measure_execution
 
 import mu.KotlinLogging
-import org.solai.solai_game_simulator.simulation.Simulation
+import org.solai.solai_game_simulator.simulator_core.Simulation
 import org.solai.solai_game_simulator.metrics.CalculatedMetric
-import org.solai.solai_game_simulator.players.Player
-import org.solai.solai_game_simulator.players.RandomPlayer
+import org.solai.solai_game_simulator.simulator_core.Player
 import org.solai.solai_game_simulator.metrics.ExistingMetrics
 import org.solai.solai_game_simulator.metrics.NamedMetric
-import org.solai.solai_game_simulator.players.RandomAttackRulePlayer
 import org.solai.solai_game_simulator.players.RulePlayer
 import sol_game.core_game.CharacterConfig
 import java.util.*

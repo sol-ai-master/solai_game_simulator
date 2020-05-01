@@ -1,4 +1,4 @@
-package org.solai.solai_game_simulator.simulation
+package org.solai.solai_game_simulator.simulator_core
 
 import org.solai.solai_game_simulator.character_queue.GameSimulationResult
 import sol_game.core_game.SolActions

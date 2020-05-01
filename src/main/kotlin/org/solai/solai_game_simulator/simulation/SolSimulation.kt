@@ -1,10 +1,10 @@
 package org.solai.solai_game_simulator.simulation
 
+import org.solai.solai_game_simulator.simulator_core.Simulation
 import sol_game.core_game.CharacterConfig
 import sol_game.core_game.SolActions
 import sol_game.core_game.SolGameSimulationOffline
 import sol_game.game_state.SolGameState
-import sol_game.game_state.SolStaticGameState
 
 class SolSimulation(
         private val characterConfigs: List<CharacterConfig>
