@@ -1,7 +1,7 @@
 {
   "name": "Schmatias",
   "radius": 64,
-  "moveVelocity": 36,
+  "moveVelocity": 600,
   "abilities": [
     {
       "name": "punch",

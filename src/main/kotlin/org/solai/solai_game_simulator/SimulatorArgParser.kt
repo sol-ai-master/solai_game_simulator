@@ -1,8 +1,10 @@
 package org.solai.solai_game_simulator
 
 import com.xenomachina.argparser.ArgParser
+import com.xenomachina.argparser.SystemExitException
 import com.xenomachina.argparser.default
 import org.solai.solai_game_simulator.simulator_core.SimulatorConfig
+import java.lang.Exception
 
 class SimulatorArgParser(parser: ArgParser) {
     val queueAddress by parser.storing(
@@ -29,6 +31,27 @@ class SimulatorArgParser(parser: ArgParser) {
             help = "Maximum number of updates for a single simulation, default=54000 (15 minutes)"
     ) {toInt()}
             .default(50000)
+
+    val playOffline by parser.storing(
+            help = "Play two characters offline. Value: <char1Id>,<char2Id>,<play as player or two bots 0,1,-1>"
+    ) {
+        try {
+            val parts = this.split(",")
+            println("parts: $parts")
+            val charIds = parts.subList(0, 2)
+            val controlPlayerId = parts[2].toInt()
+
+            PlayOfflineArgs(true, charIds, controlPlayerId)
+        } catch (e: Exception) {
+            throw SystemExitException("Invalid plyOffline args", -1)
+        }
+    }.default(PlayOfflineArgs(present = false))
+
+    data class PlayOfflineArgs(
+            val present: Boolean,
+            val charactersId: List<String> = listOf(),
+            val controllingPlayerIndex: Int = -2
+    )
 
 
     fun toSimulatorConfig() = SimulatorConfig(

@@ -67,6 +67,8 @@ dependencies {
     }
     implementation("com.github.sol-ai:sol_champ/sol_engine:-SNAPSHOT")
     implementation("com.github.sol-ai:sol_champ/sol_game:-SNAPSHOT")
+
+    implementation("org.mongodb:mongodb-driver-sync:3.11.2")
 }
 
 tasks.withType<Test> {
