@@ -7,15 +7,8 @@ import sol_game.core_game.SolActions
 import sol_game.game_state.SolGameState
 
 class RulesCalculator(
-        val weightedRules: Map<Float, Rule>,
-        val movementFuzzyness: Float = 0.1f,
-        val aimFuzzyness: Float = 0.1f,
-        val abilityFuzziness: Float = 0.1f
+        val weightedRules: Map<Float, Rule>
 ) {
-    val halfAimFuzzyness: Float = aimFuzzyness / 2f
-    val halfMovementFuzzyness = movementFuzzyness / 2f
-    val halfAbilityFuzzyness: Float = abilityFuzziness / 2f
-
     data class WeightedRuleOutput(
             val ruleOutput: RuleOutput,
             val weight: Float
@@ -29,8 +22,8 @@ class RulesCalculator(
         val myCharConfig = charactersConfig[controlledCharacterIndex]
         val otherCharConfig = charactersConfig[otherCharIndex]
 
-        val aimX = otherChar.physicalObject.position.x * MathFuncs.randRange(1 - halfAimFuzzyness, 1 + halfAimFuzzyness)
-        val aimY = otherChar.physicalObject.position.y * MathFuncs.randRange(1 - halfAimFuzzyness, 1 + halfAimFuzzyness)
+        val aimX = otherChar.physicalObject.position.x
+        val aimY = otherChar.physicalObject.position.y
 
         val rulesOutput: List<WeightedRuleOutput> = weightedRules
                 .map { WeightedRuleOutput(it.value.invoke(myChar, otherChar, staticState, myCharConfig, otherCharConfig), it.key) }
@@ -53,13 +46,13 @@ class RulesCalculator(
                 .fold(Vector2f()) { acc, new ->
                     acc.add(new)
                 }
-                .let {
-                    // apply fuzziness
-                    Vector2f(
-                            it.x * MathFuncs.randRange(1 - halfMovementFuzzyness, 1 + halfMovementFuzzyness),
-                            it.y * MathFuncs.randRange(1 - halfMovementFuzzyness, 1 + halfMovementFuzzyness)
-                    )
-                }
+//                .let {
+//                    // apply fuzziness
+//                    Vector2f(
+//                            it.x * MathFuncs.randRange(1 - halfMovementFuzzyness, 1 + halfMovementFuzzyness),
+//                            it.y * MathFuncs.randRange(1 - halfMovementFuzzyness, 1 + halfMovementFuzzyness)
+//                    )
+//                }
                 .let {
                     // normalize again to not have a short vector that yields no movement
                     if (it.lengthSquared() == 0f) it
