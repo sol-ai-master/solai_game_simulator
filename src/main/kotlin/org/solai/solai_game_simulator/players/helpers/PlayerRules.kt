@@ -8,6 +8,7 @@ import sol_game.core_game.CharacterConfig
 import sol_game.game_state.SolCharacterState
 import sol_game.game_state.SolGameStateFuncs
 import sol_game.game_state.SolStaticGameState
+import java.lang.IllegalStateException
 
 
 data class RuleOutput(
@@ -33,11 +34,13 @@ object PlayerRules {
             val closestHoleDistSquared = closestHole.lengthSquared()
             val ruleOutput =
                     if (closestHoleDistSquared != 0f && closestHoleDistSquared < maxDistance * maxDistance) {
-                        val holeDistanceLinearRatio = (minDistance / closestHole.length().coerceAtLeast(0.01f))
-                        val holeDistanceExpRatio = holeDistanceLinearRatio * holeDistanceLinearRatio
-                        val moveDir = closestHole.negate(Vector2f())
-                        val urgency = holeDistanceExpRatio.coerceAtMost(1f)
+//                        val holeDistanceLinearRatio = (minDistance / closestHole.length().coerceAtLeast(0.01f))
+//                        val holeDistanceExpRatio = holeDistanceLinearRatio * holeDistanceLinearRatio
+//                        val urgency = holeDistanceExpRatio.coerceAtMost(1f)
+//
+                        val urgency = MathFuncs.linearBetween(maxDistance, minDistance, closestHole.length())
 
+                        val moveDir = closestHole.negate(Vector2f())
                         RuleOutput(urgency, moveDirection = moveDir, abilities = listOf(false, false, false))
                     } else RuleOutput(0f)
 
@@ -105,6 +108,29 @@ object PlayerRules {
         return { myChar, otherChar, staticState, _, _ ->
             val moveDir = velocity.add(Vector2f(MathF.randRange(-0.5f, 0.5f), MathF.randRange(-0.5f, 0.5f))).normalize()
             RuleOutput(1f, moveDir)
+        }
+    }
+
+    fun createAvoidHitboxesRule(maxDistance: Float): Rule {
+        return { myChar, otherChar, staticState, _, _ ->
+            val enemyHitboxes = otherChar.currentHitboxes
+            val charPhysicalShape = myChar.physicalObject
+            val closestHitbox: Vector2f? = enemyHitboxes
+                    .map { SolGameStateFuncs.distanceOuter(charPhysicalShape, it.physicalObject) }
+                    .maxBy { it.lengthSquared() }
+
+            closestHitbox
+                    ?.let {
+                        val hitboxDistance = it.length()
+                        val urgency = MathFuncs.linearBetween(maxDistance, 10f, hitboxDistance)
+                        val moveDirection = it.negate(Vector2f())
+                        val out = RuleOutput(
+                                urgency = urgency,
+                                moveDirection = moveDirection
+                        )
+                        out
+                    }
+                    ?: RuleOutput(0f)
         }
     }
 }

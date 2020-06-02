@@ -1,13 +1,20 @@
 package org.solai.solai_game_simulator.players.helpers
 
 import org.joml.Vector2f
+import org.solai.solai_game_simulator.MathFuncs
 import sol_game.core_game.CharacterConfig
 import sol_game.core_game.SolActions
 import sol_game.game_state.SolGameState
 
 class RulesCalculator(
-        val weightedRules: Map<Float, Rule>
+        val weightedRules: Map<Float, Rule>,
+        val movementFuzzyness: Float = 0.1f,
+        val aimFuzzyness: Float = 0.1f,
+        val abilityFuzziness: Float = 0.1f
 ) {
+    val halfAimFuzzyness: Float = aimFuzzyness / 2f
+    val halfMovementFuzzyness = movementFuzzyness / 2f
+    val halfAbilityFuzzyness: Float = abilityFuzziness / 2f
 
     data class WeightedRuleOutput(
             val ruleOutput: RuleOutput,
@@ -22,8 +29,8 @@ class RulesCalculator(
         val myCharConfig = charactersConfig[controlledCharacterIndex]
         val otherCharConfig = charactersConfig[otherCharIndex]
 
-        val aimX = otherChar.physicalObject.position.x
-        val aimY = otherChar.physicalObject.position.y
+        val aimX = otherChar.physicalObject.position.x * MathFuncs.randRange(1 - halfAimFuzzyness, 1 + halfAimFuzzyness)
+        val aimY = otherChar.physicalObject.position.y * MathFuncs.randRange(1 - halfAimFuzzyness, 1 + halfAimFuzzyness)
 
         val rulesOutput: List<WeightedRuleOutput> = weightedRules
                 .map { WeightedRuleOutput(it.value.invoke(myChar, otherChar, staticState, myCharConfig, otherCharConfig), it.key) }
@@ -32,21 +39,33 @@ class RulesCalculator(
                 .asSequence()
                 .filter { it.ruleOutput.moveDirection != null }
                 .map {
-                    val weightedMoveDirection = it.ruleOutput.moveDirection!!.mul(it.weight, Vector2f())
-                    weightedMoveDirection.mul(it.ruleOutput.urgency)
+                    val moveDirection = it.ruleOutput.moveDirection!!
+                    val normalizedMoveDir =
+                            if (moveDirection.lengthSquared() == 0f) moveDirection
+                            else moveDirection.normalize(Vector2f())
+                    val weightedMoveDirection = normalizedMoveDir.mul(it.weight * it.ruleOutput.urgency, Vector2f())
+                    weightedMoveDirection
                 }
-                .map {
-                    if (it.lengthSquared() == 0f) it
-                    else it.normalize()
-                }
+//                .map {
+//                    if (it.lengthSquared() == 0f) it
+//                    else it.normalize()
+//                }
                 .fold(Vector2f()) { acc, new ->
                     acc.add(new)
+                }
+                .let {
+                    // apply fuzziness
+                    Vector2f(
+                            it.x * MathFuncs.randRange(1 - halfMovementFuzzyness, 1 + halfMovementFuzzyness),
+                            it.y * MathFuncs.randRange(1 - halfMovementFuzzyness, 1 + halfMovementFuzzyness)
+                    )
                 }
                 .let {
                     // normalize again to not have a short vector that yields no movement
                     if (it.lengthSquared() == 0f) it
                     else it.normalize()
                 }
+
 
 
         val resultAbilities: List<Boolean> = rulesOutput
