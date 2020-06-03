@@ -8,6 +8,7 @@ import org.solai.solai_game_simulator.metrics.ExistingMetrics
 import org.solai.solai_game_simulator.metrics.NamedMetric
 import org.solai.solai_game_simulator.players.RulePlayer
 import sol_game.core_game.CharacterConfig
+import sol_game.game_state.SolGameState
 import java.util.*
 import kotlin.system.measureTimeMillis
 
@@ -59,21 +60,31 @@ class SimulationMeasure(
     ) {
         simulation.start()
 
-        var state = simulation.getState()
-        val playersCount = state.charactersState.size
+        var actualState = simulation.getState()
+        val playersCount = actualState.charactersState.size
 
-        players.forEachIndexed { index, player -> player.onStart(index, state, charactersConfig) }
-        metrics.forEach { it.metric.start(playersCount, state) }
+        players.forEachIndexed { index, player -> player.onStart(index, actualState, charactersConfig) }
+        metrics.forEach { it.metric.start(playersCount, actualState) }
+
+        val stateDelay = 12  // frames
+        val prevStates = LinkedList<SolGameState>()
+        (0 until stateDelay).forEach { _ -> prevStates.add(actualState) }
 
         var updateCount = 0
         while (updateCount++ < maxUpdates && !simulation.isFinished()) {
             val updateTime = measureTimeMillis {
-                simulation.update()
-                state = simulation.getState()
-                val inputs = players.mapIndexed { index, player -> player.onUpdate(index, state, charactersConfig) }
-                metrics.forEach { it.metric.update(state) }
+
+                actualState = simulation.getState()
+                val playerPerceivedState = prevStates.pollLast()
+                prevStates.addFirst(actualState)
+
+                val inputs = players.mapIndexed { index, player ->
+                    player.onUpdate(index, playerPerceivedState, charactersConfig)
+                }
+                metrics.forEach { it.metric.update(actualState) }
 
                 simulation.setInputs(inputs)
+                simulation.update()
             }
 
             val sleepTime = updateDelayMillis.toLong() - updateTime
@@ -83,8 +94,8 @@ class SimulationMeasure(
         }
 
         simulation.end()
-        players.forEachIndexed { index, player ->  player.onEnd(index, state, charactersConfig) }
-        metrics.forEach { it.metric.end(state) }
+        players.forEachIndexed { index, player ->  player.onEnd(index, actualState, charactersConfig) }
+        metrics.forEach { it.metric.end(actualState) }
     }
 
 }
