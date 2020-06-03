@@ -88,7 +88,7 @@ object PlayerRules {
         val fuzzyAbilities = abilitiesInRange.map { if (MathF.random() < 0.01) !it else it }
         val anyAbilities = fuzzyAbilities.any { it }
         val shouldAttack = anyAbilities && MathF.random() > 0.9f
-        val urgency = MathFuncs.linearBetween (2000f, 100f, distToChar)
+        val urgency = MathFuncs.linearBetween (2000f, 100f, distToChar) * MathF.random()
 
         RuleOutput(
                 urgency,

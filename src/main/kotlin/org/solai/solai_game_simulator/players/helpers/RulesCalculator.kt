@@ -1,9 +1,12 @@
 package org.solai.solai_game_simulator.players.helpers
 
+import glm_.pow
 import org.joml.Vector2f
 import org.solai.solai_game_simulator.MathFuncs
+import sol_engine.physics_module.PhysicsConstants
 import sol_game.core_game.CharacterConfig
 import sol_game.core_game.SolActions
+import sol_game.game_state.SolCharacterState
 import sol_game.game_state.SolGameState
 
 class RulesCalculator(
@@ -22,11 +25,15 @@ class RulesCalculator(
         val myCharConfig = charactersConfig[controlledCharacterIndex]
         val otherCharConfig = charactersConfig[otherCharIndex]
 
-        val aimX = otherChar.physicalObject.position.x
-        val aimY = otherChar.physicalObject.position.y
+        val predictFutureFrames = 12
+        val predictedMyChar = predictCharState(myChar, predictFutureFrames)
+        val predictedOtherChar = predictCharState(otherChar, predictFutureFrames)
+
+        val aimX = predictedOtherChar.physicalObject.position.x
+        val aimY = predictedOtherChar.physicalObject.position.y
 
         val rulesOutput: List<WeightedRuleOutput> = weightedRules
-                .map { WeightedRuleOutput(it.value.invoke(myChar, otherChar, staticState, myCharConfig, otherCharConfig), it.key) }
+                .map { WeightedRuleOutput(it.value.invoke(predictedMyChar, predictedOtherChar, staticState, myCharConfig, otherCharConfig), it.key) }
 
         val resultMoveDirection: Vector2f = rulesOutput
                 .asSequence()
@@ -85,5 +92,40 @@ class RulesCalculator(
                 aimX = aimX,
                 aimY = aimY
         )
+    }
+
+    fun predictCharState(charState: SolCharacterState, futureFrames: Int): SolCharacterState {
+        val charVeocity = charState.velocity
+        val charPos = charState.physicalObject.position
+
+        val predictedChar = charState.copy(
+                physicalObject = charState.physicalObject.copy(
+                        position = predictPosition(charPos, charVeocity, futureFrames, frictionMultiplier = 0.7f)
+                ),
+                currentHitboxes = charState.currentHitboxes
+                        .map { hitbox ->
+                            val pos = hitbox.physicalObject.position
+                            val vel = hitbox.velocity
+                            hitbox.copy(
+                                    physicalObject = hitbox.physicalObject.copy(
+                                            position = predictPosition(pos, vel, futureFrames)
+                                    )
+                            )
+                        }
+        )
+        return predictedChar
+    }
+
+    fun predictPosition(
+            currPos: Vector2f,
+            currVel: Vector2f,
+            futureFrames: Int,
+            frictionMultiplier: Float = 1f
+    ): Vector2f {
+        val extrapolationMultiplier = futureFrames * PhysicsConstants.FIXED_UPDATE_TIME
+        val frictionMultiplierOverFrames = frictionMultiplier.pow(futureFrames)
+        val predictedPos = currPos.add(
+                currVel.mul(extrapolationMultiplier * frictionMultiplierOverFrames, Vector2f()))
+        return predictedPos
     }
 }

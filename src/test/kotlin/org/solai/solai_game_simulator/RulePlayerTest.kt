@@ -7,6 +7,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.solai.solai_game_simulator.players.RulePlayer
 import org.solai.solai_game_simulator.simulation.SolSimulation
 import sol_game.CharacterConfigLoader
+import sol_game.game_state.SolGameState
+import java.util.*
+import kotlin.collections.ArrayDeque
 
 class RulePlayerTest {
 
@@ -14,12 +17,12 @@ class RulePlayerTest {
     fun testRulePlayer() {
         val charactersConfig = listOf(
                 CharacterConfigLoader.fromResourceFile("shrankConfig.json"),
-                CharacterConfigLoader.fromResourceFile("schmathiasConfig.json")
+                CharacterConfigLoader.fromResourceFile("magnetConfig.json")
         )
         val sim = SolSimulation(charactersConfig)
         val players = listOf(
-                RulePlayer(0.1f),
-                RulePlayer(5f)
+                RulePlayer(),
+                RulePlayer()
         )
 
         sim.setup(headless = false)
@@ -34,8 +37,15 @@ class RulePlayerTest {
                 charactersConfig = charactersConfig
         ) }
 
+        val stateDelay = 12
+
+        val prevStates = LinkedList<SolGameState>()
+        (0 until stateDelay).forEach { _ -> prevStates.add(initialSimState) }
+
         while (! sim.isFinished()) {
-            val gameState = sim.getState()
+            val gameState = prevStates.pollLast()
+            prevStates.addFirst(sim.getState())
+
             val actions = players.mapIndexed { index, player -> player.onUpdate(
                             controlledCharacterIndex = index,
                             gameState = gameState,
