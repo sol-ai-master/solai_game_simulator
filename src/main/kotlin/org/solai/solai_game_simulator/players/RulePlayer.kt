@@ -11,12 +11,12 @@ import sol_game.game_state.SolGameState
 class RulePlayer : Player {
     val rulesCalculator = RulesCalculator(
             mapOf(
-                    3f to PlayerRules.createAvoidHolesRule(300f, 20f),
+                    3.1f to PlayerRules.createAvoidHolesRule(300f, 20f),
                     0.6f to PlayerRules.createRetreatRule(0f, 300f),
-                    1.6f to PlayerRules.createConfigBasedAttackRule(),
-                    1.2f to PlayerRules.createApproachRule(1600f),
+                    1.2f to PlayerRules.createConfigBasedAttackRule(),
+                    1.4f to PlayerRules.createApproachRule(1600f),
                     1f to PlayerRules.createMoveRandomRule(),
-                    2.6f to PlayerRules.createAvoidHitboxesRule(150f)
+                    2.7f to PlayerRules.createAvoidHitboxesRule(100f)
             ).map { it.key * 0.1f to it.value }.toMap()
 
     )
@@ -26,7 +26,7 @@ class RulePlayer : Player {
         val fuzzyActions = PlayerUtils.applyFuzziness(actions,
                 aimVariance = 30f,
                 movementFuzzyness = 0.1f,
-                abilityFuzzyness = 0.05f
+                abilityFuzzyness = 0f //0.001f
         )
         return fuzzyActions
     }

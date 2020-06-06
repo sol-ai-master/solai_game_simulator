@@ -54,7 +54,7 @@ object PlayerRules {
                 val distToOtherChar = SolGameStateFuncs.distanceOuter(myChar.physicalObject, otherChar.physicalObject)
                 val moveDir = distToOtherChar
                 val urgency = MathFuncs.linearBetween(0f, maxDistance, distToOtherChar.length())
-                RuleOutput(urgency, moveDir, listOf(false, false, false))
+                RuleOutput(urgency, moveDir) //, listOf(false, false, false))
             }
 
     fun createRandomAttackRule(): Rule = { myChar, otherChar, staticState, _, _ ->
@@ -80,20 +80,25 @@ object PlayerRules {
             initialReach + additionalReachOverTime
         }
 
-        val abilitiesInRange: List<Boolean> = myCharConfig.abilities
+        val abilitiesReachCharDist: List<Float> = myCharConfig.abilities
                 .map { abilityMaxReachOuter(it) }
                 .map { distToChar - it }
-                .map { it < 0f }
 
-        val fuzzyAbilities = abilitiesInRange.map { if (MathF.random() < 0.01) !it else it }
-        val anyAbilities = fuzzyAbilities.any { it }
-        val shouldAttack = anyAbilities && MathF.random() > 0.9f
-        val urgency = MathFuncs.linearBetween (2000f, 100f, distToChar) * MathF.random()
+        val abilitiesIndexInRange = abilitiesReachCharDist
+                .mapIndexedNotNull { index, reachDist -> if (reachDist < 0f) index else null}
 
-        RuleOutput(
-                urgency,
-                abilities = if (shouldAttack) fuzzyAbilities else null
-        )
+        if (abilitiesIndexInRange.isNotEmpty()) {
+            val choseAbilityIndex = abilitiesIndexInRange.random()
+            val abilities = myCharConfig.abilities.indices.map { index-> index == choseAbilityIndex }
+            val urgency = MathFuncs.linearBetween (2000f, 100f, distToChar)
+            RuleOutput(
+                    urgency,
+                    abilities = abilities
+            )
+        }
+        else {
+            RuleOutput(0f)
+        }
     }
 
     fun createRetreatRule(minDistance: Float, maxDistance: Float): Rule = { myChar, otherChar, staticState, _, _ ->
@@ -123,10 +128,12 @@ object PlayerRules {
                     ?.let {
                         val hitboxDistance = it.length()
                         val urgency = MathFuncs.linearBetween(maxDistance, 10f, hitboxDistance)
-                        val moveDirection = it.negate(Vector2f())
+                        val moveAwayDirection = it.negate(Vector2f())
+                        val moveDirection = myChar.velocity.add(moveAwayDirection, Vector2f())
                         val out = RuleOutput(
                                 urgency = urgency,
-                                moveDirection = moveDirection
+                                moveDirection = moveDirection,
+                                abilities = listOf(false, false, false)
                         )
                         out
                     }

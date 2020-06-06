@@ -45,7 +45,12 @@ object ExistingMetrics {
             ),
             DescribedMetric(
                     "stageCoverage",
-                    "The amount of the stage that is covered by each character",
+                    """
+                        The amount of the stage that is covered by the characters.
+                        The stage is discretized into cells of 32 x 32 units, and this metric
+                        returns the amount of cells that have been visited during a game
+                        divided by the total amount of cells
+                    """.trimIndent(),
                     StageCoverageMetric::class
             ),
             DescribedMetric(

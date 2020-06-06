@@ -100,7 +100,7 @@ class RulesCalculator(
 
         val predictedChar = charState.copy(
                 physicalObject = charState.physicalObject.copy(
-                        position = predictPosition(charPos, charVeocity, futureFrames, frictionMultiplier = 0.7f)
+//                        position = predictPosition(charPos, charVeocity, futureFrames, frictionMultiplier = 0.1f)
                 ),
                 currentHitboxes = charState.currentHitboxes
                         .map { hitbox ->
@@ -123,7 +123,7 @@ class RulesCalculator(
             frictionMultiplier: Float = 1f
     ): Vector2f {
         val extrapolationMultiplier = futureFrames * PhysicsConstants.FIXED_UPDATE_TIME
-        val frictionMultiplierOverFrames = frictionMultiplier.pow(futureFrames)
+        val frictionMultiplierOverFrames = frictionMultiplier.pow(futureFrames.toFloat())
         val predictedPos = currPos.add(
                 currVel.mul(extrapolationMultiplier * frictionMultiplierOverFrames, Vector2f()))
         return predictedPos

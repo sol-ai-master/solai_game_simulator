@@ -60,21 +60,21 @@ class SimulationMeasure(
     ) {
         simulation.start()
 
-        var actualState = simulation.getState()
-        val playersCount = actualState.charactersState.size
+        var initialState = simulation.getState()
+        val playersCount = initialState.charactersState.size
 
-        players.forEachIndexed { index, player -> player.onStart(index, actualState, charactersConfig) }
-        metrics.forEach { it.metric.start(playersCount, actualState) }
+        players.forEachIndexed { index, player -> player.onStart(index, initialState, charactersConfig) }
+        metrics.forEach { it.metric.start(playersCount, initialState) }
 
         val stateDelay = 12  // frames
         val prevStates = LinkedList<SolGameState>()
-        (0 until stateDelay).forEach { _ -> prevStates.add(actualState) }
+        (0 until stateDelay).forEach { _ -> prevStates.add(initialState) }
 
         var updateCount = 0
         while (updateCount++ < maxUpdates && !simulation.isFinished()) {
             val updateTime = measureTimeMillis {
 
-                actualState = simulation.getState()
+                val actualState = simulation.getState()
                 val playerPerceivedState = prevStates.pollLast()
                 prevStates.addFirst(actualState)
 
@@ -92,10 +92,10 @@ class SimulationMeasure(
                 Thread.sleep(sleepTime)
             }
         }
-
+        val lastState = simulation.getState()
         simulation.end()
-        players.forEachIndexed { index, player ->  player.onEnd(index, actualState, charactersConfig) }
-        metrics.forEach { it.metric.end(actualState) }
+        players.forEachIndexed { index, player ->  player.onEnd(index, lastState, charactersConfig) }
+        metrics.forEach { it.metric.end(lastState) }
     }
 
 }

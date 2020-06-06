@@ -19,6 +19,11 @@ object PlayerUtils {
         return listOf(mvLeft, mvRight, mvUp, mvDown)
     }
 
+    fun directionToMoveInputAsAction(normalizedDirection: Vector2f): SolActions {
+        val inputs = directionToMoveInput(normalizedDirection)
+        return SolActions(mvLeft = inputs[0], mvRight = inputs[1], mvUp = inputs[2], mvDown = inputs[3])
+    }
+
     fun applyFuzziness(
             actions: SolActions,
             movementFuzzyness: Float,  // the probability of swapping a movement input

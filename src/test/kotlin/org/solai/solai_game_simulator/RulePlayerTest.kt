@@ -17,7 +17,7 @@ class RulePlayerTest {
     fun testRulePlayer() {
         val charactersConfig = listOf(
                 CharacterConfigLoader.fromResourceFile("shrankConfig.json"),
-                CharacterConfigLoader.fromResourceFile("magnetConfig.json")
+                CharacterConfigLoader.fromResourceFile("schmathiasConfig.json")
         )
         val sim = SolSimulation(charactersConfig)
         val players = listOf(
@@ -53,7 +53,7 @@ class RulePlayerTest {
                     ) }
             sim.setInputs(actions)
             sim.update()
-            Thread.sleep(16)
+            Thread.sleep(8)
         }
     }
 }

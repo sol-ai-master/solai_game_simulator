@@ -27,24 +27,16 @@ class StageCoverageMetric : Metric {
             return "DiscreteBoardVisits(boardSize=$worldSize, cellSize=$cellSize, discreteBoardSize=$discreteBoardSize, discreteBoard=$discreteBoard)"
         }
 
-        fun getCellVisitFrequency(): Map<Int, Int> {
-            val frequency = getAllCellValues()
-                    .groupingBy { it }
-                    .eachCount()
-                    .filter { entry -> entry.key != 0 }
-            println("frequency: $frequency")
-            return frequency
-        }
+        fun getCellCount() = discreteBoardSize.x * discreteBoardSize.y
 
     }
 
     var boardVisitsPerCharacter = listOf<DiscreteBoardVisits>()
         private set
 
-    var worldSize = Vector2f()
 
     override fun start(playersCount: Int, gameState: SolGameState) {
-        worldSize = Vector2f(gameState.staticGameState.worldSize)
+        val worldSize = Vector2f(gameState.staticGameState.worldSize)
         boardVisitsPerCharacter = (0 until playersCount).map { DiscreteBoardVisits(worldSize) }
     }
 
@@ -54,14 +46,9 @@ class StageCoverageMetric : Metric {
                 .forEachIndexed { index, pos -> boardVisitsPerCharacter[index].addVisit(pos) }
     }
 
-    private fun deviationFromOne(values: List<Int>): Float {
-        return values.map { 1f / it.toFloat() }.sum() / values.size
-    }
-
-    // linear deviation from one for each cell
     override fun calculate(): List<Float> {
         return boardVisitsPerCharacter.map { boardVisits ->
-            deviationFromOne(boardVisits.getAllCellValues().filter { it != 0 })
+            boardVisits.getAllCellValues().map { if (it == 0) 0f else 1f }.sum() / boardVisits.getCellCount()
         }
     }
 }
