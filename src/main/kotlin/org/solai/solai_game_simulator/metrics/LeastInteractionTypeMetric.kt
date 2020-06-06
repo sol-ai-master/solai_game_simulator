@@ -5,7 +5,7 @@ import sol_game.game_state.HitboxHitState
 import sol_game.game_state.SolGameState
 import java.lang.IllegalStateException
 
-class LeastInteractionCountMetric : Metric {
+class LeastInteractionTypeMetric : Metric {
 
     var charactersAbilitiesHitCount: List<MutableMap<String, Int>>? = null
 
@@ -41,7 +41,7 @@ class LeastInteractionCountMetric : Metric {
     override fun calculate(): List<Float> {
         return charactersAbilitiesHitCount
                 ?.map {abilitiesCount ->
-                    abilitiesCount.values.min()!!.toFloat()
+                    abilitiesCount.values.min()!!.toFloat() / abilitiesCount.values.sum()
                 }
                 ?: listOf(0f)
     }

@@ -71,6 +71,12 @@ object ExistingMetrics {
                     "hitInteractions",
                     "The amount of attacks that hit an opponent",
                     HitInteractionsMetric::class
+            ),
+            DescribedMetric(
+                    "leastInteractionType",
+                    "The amount of the least hit ability type relative to the total hit ability types." +
+                            "Given in the range [0, 1]",
+                    LeastInteractionTypeMetric::class
             )
     )
 

@@ -9,7 +9,7 @@ import sol_game.CharacterConfigLoader
 import sol_game.core_game.SolActions
 import sol_game.game_state.SolGameStateFuncs
 
-class LeastInteractionCountMetricTest {
+class LeastInteractionTypeMetricTest {
 
     fun moveCharactersUpUntilHole(sim: SolSimulation, callOnUpdate: ((SolSimulation) -> Unit)? = null) {
         while (true) {
@@ -86,7 +86,7 @@ class LeastInteractionCountMetricTest {
     }
 
     @Test
-    fun testVisually() {
+    fun testBySimulation() {
         val charactersConfig = listOf(
                 CharacterConfigLoader.fromResourceFile("shrankConfig.json"),
                 CharacterConfigLoader.fromResourceFile("schmathiasConfig.json")
@@ -95,7 +95,7 @@ class LeastInteractionCountMetricTest {
         sim.setup(false)
         sim.start()
 
-        val leastInteractionCountMetric = LeastInteractionCountMetric()
+        val leastInteractionCountMetric = LeastInteractionTypeMetric()
         leastInteractionCountMetric.setup()
         leastInteractionCountMetric.start(2, sim.getState())
 
@@ -114,8 +114,8 @@ class LeastInteractionCountMetricTest {
         println(leastInteractionCountMetric.charactersAbilitiesHitCount)
 
         val metricCalc = leastInteractionCountMetric.calculate()
-        Assertions.assertEquals(1f, metricCalc[0], "least used ability of char0 should be used 1 time")
-        Assertions.assertEquals(0f, metricCalc[1], "least used ability of char1 should be used 0 times")
+        Assertions.assertEquals(1f / 6, metricCalc[0], 0.0001f, "least hit ability of char0 should be hit 1/6 of the total hits")
+        Assertions.assertEquals(0f, metricCalc[1], 0.0001f, "least used ability of char1 should be hit 0 of the total hits")
     }
 
 }
