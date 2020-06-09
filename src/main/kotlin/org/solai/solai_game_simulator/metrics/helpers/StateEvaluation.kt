@@ -16,14 +16,14 @@ object StateEvaluation {
         val maxStocks = 3f
         val stockEvaluation = (charConfig.stocks.toFloat()-1) / (maxStocks-1)
 
-        val maxDamage = 3000f  // what we consider max
+        val maxDamage = 5000f  // what we consider max
         val damageEvaluation = MathFuncs.linearBetween(maxDamage, 0f, charConfig.damage)
 
-        val holeDistance = SolGameStateFuncs.closestHole(charConfig.physicalObject, state.staticGameState).length()
-        val maxHoleDistance = 300f
-        val holeDistanceEvaluation = MathFuncs.linearBetween(0f, maxHoleDistance, holeDistance)
+//        val holeDistance = SolGameStateFuncs.closestHole(charConfig.physicalObject, state.staticGameState).length()
+//        val maxHoleDistance = 300f
+//        val holeDistanceEvaluation = MathFuncs.linearBetween(0f, maxHoleDistance, holeDistance)
 
-        val weightedEvaluation = 0.67f * stockEvaluation + 0.13f * damageEvaluation + 0.20f * holeDistanceEvaluation
+        val weightedEvaluation = 0.67f * stockEvaluation + 0.33f * damageEvaluation // + 0.20f * holeDistanceEvaluation
         return weightedEvaluation
     }
 
