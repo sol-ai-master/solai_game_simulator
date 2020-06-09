@@ -41,9 +41,15 @@ class LeastInteractionTypeMetric : Metric {
     override fun calculate(): List<Float> {
         return charactersAbilitiesHitCount
                 ?.map {abilitiesCount ->
-                    abilitiesCount.values.min()!!.toFloat() / abilitiesCount.values.sum()
+                    val minVal = abilitiesCount.values.min()!!
+                    val sum = abilitiesCount.values.sum()
+                    if (sum == 0) {
+                        0f
+                    } else {
+                        minVal.toFloat() / sum.toFloat()
+                    }
                 }
-                ?: listOf(0f)
+                ?: listOf(0f, 0f)
     }
 
 }
