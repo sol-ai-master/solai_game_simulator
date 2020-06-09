@@ -26,6 +26,7 @@ class SimulationQueueExecuter(
             @Synchronized get
             @Synchronized set
 
+    private var successfulSimulationsFinishedCount = 0
 
     fun simulationMeasureToResult(simulationMeasure: SimulationMeasure): GameSimulationResult? {
         val metricResults = simulationMeasure.calculateMetrics()
@@ -51,6 +52,11 @@ class SimulationQueueExecuter(
         simulationsMeasureExecutor.onSimulationMeasureFinished { simulationMeasure ->
             simulationMeasureToResult(simulationMeasure)
                     ?.let {
+                        successfulSimulationsFinishedCount++
+                        if (successfulSimulationsFinishedCount % 10 == 0) {
+                            println("Total simulations: $successfulSimulationsFinishedCount")
+                        }
+
                         pushSimulationQueue.pushSimulationResult(it)
                         simulationDataById.remove(it.simulationId)
                     }

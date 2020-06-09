@@ -53,7 +53,7 @@ class RulePlayerTest {
                     ) }
             sim.setInputs(actions)
             sim.update()
-            Thread.sleep(8)
+            Thread.sleep(15)
         }
     }
 }
