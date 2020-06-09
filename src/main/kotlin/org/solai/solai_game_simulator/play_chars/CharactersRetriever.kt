@@ -18,9 +18,10 @@ data class EvaluatedIndividual(
 )
 
 data class EvaluatedNoveltyIndividual(
-        val individual: CharacterConfig,
-        val fitness: List<Float>,
-        val novelty: Float
+        val individual: CharacterConfig?,
+        val fitness: List<Float>?,
+        val novelty: Float?,
+        val feasibility_score: Float?
 )
 
 
@@ -28,8 +29,9 @@ data class EvolutionInstance(
         val _id: ObjectId,
         val evolutionStart: String,
         val generations: List<List<EvaluatedIndividual>>,
-        val evolutionConfig: Map<String, Any>,
+        val evolutionConfig: Map<String, Any>?,
         val novelArchive: List<EvaluatedNoveltyIndividual>?,
+        val fitnessArchive: Any?,
         val totalTimeTaken: String?
 )
 
