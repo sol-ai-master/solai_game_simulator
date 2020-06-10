@@ -10,8 +10,8 @@ interface SimulationQueue {
 
     companion object {
         fun getQueue(address: String, port: Int = -1): SimulationQueue? {
-            val simulationQueue = RedisSimulationQueue()
-            val connected = simulationQueue.connect(address, port)
+            val simulationQueue = RedisSimulationQueue(address, port)
+            val connected = simulationQueue.connect()
             return if (connected) simulationQueue else null
         }
     }

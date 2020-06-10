@@ -20,14 +20,16 @@ private val PUSH_SIMULATION_RESULT_LOG_PREFIX = "Push simulation result to queue
 private val POLL_SIMULATION_RESULT_LOG_PREFIX = "Poll simulation result from queue"
 
 
-class RedisSimulationQueue : SimulationQueue {
+class RedisSimulationQueue(
+        val address: String,
+        val port: Int
+) : SimulationQueue {
     private lateinit var jedis: Jedis
     private val jsonMapper = jacksonObjectMapper()
 
-    fun connect(address: String, port: Int): Boolean {
+    fun connect(): Boolean {
         jedis = if (port == -1) Jedis(address) else Jedis(address, port)
-//        jedis.connect()
-        return true //jedis.isConnected
+        return true
     }
 
     override fun close() {
@@ -91,7 +93,10 @@ class RedisSimulationQueue : SimulationQueue {
             call(jedis)
         }
         catch (e: JedisConnectionException) {
-            logger.warn("jedis connection could not be established when exectuing: $callName")
+            logger.warn("jedis connection could not be established when exectuing: $callName. Will close and reconnect. By jedis exception:" +
+                    "\n$e")
+            close()
+            connect()
             null
         }
     }
