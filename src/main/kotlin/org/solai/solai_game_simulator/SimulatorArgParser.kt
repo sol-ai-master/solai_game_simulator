@@ -30,7 +30,7 @@ class SimulatorArgParser(parser: ArgParser) {
     val maxSimulationUpdates by parser.storing(
             help = "Maximum number of updates for a single simulation, default=54000 (15 minutes)"
     ) {toInt()}
-            .default(50000)
+            .default(10000)
 
     val playOffline by parser.storing(
             help = "Play two characters offline. Value: <char1Id>,<char2Id>,<play as player or two bots 0,1,-1>"
