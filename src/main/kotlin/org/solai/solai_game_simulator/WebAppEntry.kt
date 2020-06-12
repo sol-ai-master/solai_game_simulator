@@ -24,7 +24,8 @@ fun main(args: Array<String>) {
 //        ExperimentsCharacterRetriever.saveAllExperiemntChars()
         ExperimentsCharacterRetriever.playExperimentChars(
                 parsedArgs.experiment.experimentLabel,
-                parsedArgs.experiment.pairIndex
+                parsedArgs.experiment.pairIndex,
+                parsedArgs.experiment.playerIndex
         )
     }
 

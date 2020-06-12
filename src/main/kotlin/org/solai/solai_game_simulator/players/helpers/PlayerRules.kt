@@ -59,7 +59,7 @@ object PlayerRules {
 
     fun createRandomAttackRule(): Rule = { myChar, otherChar, staticState, _, _ ->
         val distToOtherChar = SolGameStateFuncs.distanceOuter(myChar.physicalObject, otherChar.physicalObject)
-        val urgency = (500f / distToOtherChar.length().coerceAtLeast(0.01f)).coerceAtMost(1f)
+        val urgency = (1000f / distToOtherChar.length().coerceAtLeast(0.01f)).coerceAtMost(1f)
         val shouldAttack = MathF.randInt(0, 20) == 0
         val abilities =
                 if (shouldAttack) {

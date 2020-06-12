@@ -1,14 +1,40 @@
 package org.solai.solai_game_simulator.play_chars
 
 import org.solai.solai_game_simulator.players.RulePlayer
+import org.solai.solai_game_simulator.players.WorseRulePlayer
 import sol_game.core_game.CharacterConfig
 import sol_game.core_game.SolGameSimulationOffline
+import sol_game.game.SimpleSolGameServerPoolServer
+import sol_game.game.SolGameClient
+import sol_game.game.requestGameServerInstance
+import sol_game.game.SolGameServerPool
 import kotlin.system.measureNanoTime
 
 object PlaySolGame {
 
+    fun playServer(characterConfigs: List<CharacterConfig>) {
+        val server = SimpleSolGameServerPoolServer(
+                headless = false
+        )
+        server.serve(7779, characterConfigs)
+    }
+
+    fun playClient(player: Int) {
+        val connctionData = requestGameServerInstance("localhost", 7779)!!
+        val client = SolGameClient(
+                connectAddress = connctionData.address,
+                connectPort = connctionData.port,
+                gameId = connctionData.gameId,
+                isObserver = false,
+                connectionKey = connctionData.teamsPlayersKeys[player][0]
+        )
+        client.setup()
+        client.start()
+        client.waitUntilFinished()
+    }
+
     fun playOffline(characterConfigs: List<CharacterConfig>, controlPlayerIndex: Int) {
-        val aiPlayers = listOf(RulePlayer(), RulePlayer())
+        val aiPlayers = listOf(WorseRulePlayer(), WorseRulePlayer())
 
         val solOfflineGame = SolGameSimulationOffline(
                 charactersConfigs = characterConfigs,

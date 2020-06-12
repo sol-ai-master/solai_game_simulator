@@ -145,15 +145,24 @@ object ExperimentsCharacterRetriever {
             )
     )
 
-    fun playExperimentChars(experimentLabel: String, characterPairIndex: Int) {
+    fun playExperimentChars(experimentLabel: String, characterPairIndex: Int, playerIndex: Int = -2) {
         val characterIdPair = experimentsCharacterPairs[experimentLabel]
                 ?.get(characterPairIndex)
                 ?: throw IllegalArgumentException("Experiment label invalid: $experimentLabel")
         val char1Config = CharacterConfigLoader.fromResourceFile("experimentsCharactersConfig/${characterIdPair.first}.json")
         val char2Config = CharacterConfigLoader.fromResourceFile("experimentsCharactersConfig/${characterIdPair.second}.json")
 
-
-        PlaySolGame.playOffline(listOf(char1Config, char2Config), 0)
+        val charConfigs = listOf(char1Config, char2Config)
+        println("playerIndex $playerIndex")
+        if (playerIndex == -2) {
+            PlaySolGame.playOffline(charConfigs, 0)
+        }
+        else if (playerIndex == -1) {
+            PlaySolGame.playServer(charConfigs)
+        }
+        else if (playerIndex == 0 || playerIndex == 1) {
+            PlaySolGame.playClient(playerIndex)
+        }
     }
 
 }

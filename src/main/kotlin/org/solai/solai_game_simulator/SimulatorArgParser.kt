@@ -55,8 +55,11 @@ class SimulatorArgParser(parser: ArgParser) {
             println("parts: $parts")
             val experiment = parts[0]
             val pairIndex = parts[1].toInt()
+            val playerIndex = if (parts.lastIndex >= 2) parts[2].toInt() else -2
 
-            ExperimentArgs(true, experiment, pairIndex)
+
+
+            ExperimentArgs(true, experiment, pairIndex, playerIndex)
         } catch (e: Exception) {
             throw SystemExitException("Invalid plyOffline args", -1)
         }
@@ -71,7 +74,8 @@ class SimulatorArgParser(parser: ArgParser) {
     data class ExperimentArgs(
             val present: Boolean,
             val experimentLabel: String = "-1",
-            val pairIndex: Int = -1
+            val pairIndex: Int = -1,
+            val playerIndex: Int = -2
     )
 
 
