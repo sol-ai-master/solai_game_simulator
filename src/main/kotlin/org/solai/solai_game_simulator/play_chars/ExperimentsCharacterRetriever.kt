@@ -112,35 +112,36 @@ object ExperimentsCharacterRetriever {
             ),
             "e2" to listOf(
                     lastPopFeasiblesId[0] to shrankCharacterId,
-                    shrankCharacterId to shrankCharacterId,
+                    brailCharacterId to shrankCharacterId,
                     lastPopFeasiblesId[1] to shrankCharacterId,
-                    schmathiasCharacterId to shrankCharacterId,
+                    magnetCharacterId to shrankCharacterId,
 
                     lastPopFeasiblesId[0] to schmathiasCharacterId,
-                    shrankCharacterId to schmathiasCharacterId,
+                    brailCharacterId to schmathiasCharacterId,
                     lastPopFeasiblesId[1] to schmathiasCharacterId,
-                    schmathiasCharacterId to schmathiasCharacterId,
+                    magnetCharacterId to schmathiasCharacterId,
 
 
                     lastPopFeasiblesId[2] to shrankCharacterId,
-                    shrankCharacterId to shrankCharacterId,
+                    brailCharacterId to shrankCharacterId,
                     lastPopFeasiblesId[3] to shrankCharacterId,
-                    schmathiasCharacterId to shrankCharacterId,
+                    magnetCharacterId to shrankCharacterId,
 
                     lastPopFeasiblesId[2] to schmathiasCharacterId,
-                    shrankCharacterId to schmathiasCharacterId,
+                    brailCharacterId to schmathiasCharacterId,
                     lastPopFeasiblesId[3] to schmathiasCharacterId,
-                    schmathiasCharacterId to schmathiasCharacterId,
+                    magnetCharacterId to schmathiasCharacterId,
 
 
+                    lastPopFeasiblesId[4] to shrankCharacterId,
+                    brailCharacterId to shrankCharacterId,
+                    lastPopFeasiblesId[5] to shrankCharacterId,
+                    magnetCharacterId to shrankCharacterId,
 
-                    "" to schmathiasCharacterId,
-                    "" to shrankCharacterId,
-                    "" to schmathiasCharacterId,
-                    "" to shrankCharacterId,
-                    "" to schmathiasCharacterId,
-                    "" to shrankCharacterId,
-                    "" to schmathiasCharacterId
+                    lastPopFeasiblesId[4] to schmathiasCharacterId,
+                    brailCharacterId to schmathiasCharacterId,
+                    lastPopFeasiblesId[5] to schmathiasCharacterId,
+                    magnetCharacterId to schmathiasCharacterId
             )
     )
 

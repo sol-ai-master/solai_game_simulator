@@ -53,6 +53,7 @@ object PlaySolGame {
                     .toLong().coerceAtLeast(0)
             Thread.sleep(sleepTime)
         }
+        solOfflineGame.terminate()
     }
 
 }

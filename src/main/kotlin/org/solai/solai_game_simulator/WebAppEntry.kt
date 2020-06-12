@@ -28,7 +28,7 @@ fun main(args: Array<String>) {
         )
     }
 
-    if (parsedArgs.playOffline.present) {
+    else if (parsedArgs.playOffline.present) {
         val charsConfig = parsedArgs.playOffline.charactersId
                 .map { CharactersRetriever.fetchDBCharacterConfig(it) }
                 .onEach { it ?: throw IllegalArgumentException("No characters found for given ids") }
