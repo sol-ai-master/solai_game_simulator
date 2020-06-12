@@ -25,7 +25,7 @@ class SimulatorArgParser(parser: ArgParser) {
     val maxParallelJobs by parser.storing(
             help = "How many Simulation jobs can run in parallel, default=50"
     ) {toInt()}
-            .default(50)
+            .default(100)
 
     val maxSimulationUpdates by parser.storing(
             help = "Maximum number of updates for a single simulation, default=54000 (15 minutes)"
@@ -47,10 +47,31 @@ class SimulatorArgParser(parser: ArgParser) {
         }
     }.default(PlayOfflineArgs(present = false))
 
+    val experiment by parser.storing(
+            help = "Experiment <e,ind>"
+    ) {
+        try {
+            val parts = this.split(",")
+            println("parts: $parts")
+            val experiment = parts[0]
+            val pairIndex = parts[1].toInt()
+
+            ExperimentArgs(true, experiment, pairIndex)
+        } catch (e: Exception) {
+            throw SystemExitException("Invalid plyOffline args", -1)
+        }
+    }.default(ExperimentArgs(present = false))
+
     data class PlayOfflineArgs(
             val present: Boolean,
             val charactersId: List<String> = listOf(),
             val controllingPlayerIndex: Int = -2
+    )
+
+    data class ExperimentArgs(
+            val present: Boolean,
+            val experimentLabel: String = "-1",
+            val pairIndex: Int = -1
     )
 
 

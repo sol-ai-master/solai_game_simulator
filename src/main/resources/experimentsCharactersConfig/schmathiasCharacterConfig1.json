@@ -1,0 +1,58 @@
+{
+  "name": "Schmatias",
+  "radius": 64,
+  "moveVelocity": 600,
+  "abilities": [
+    {
+      "name": "punch",
+      "type": "MELEE",
+      "radius": 32,
+      "distanceFromChar": 16,
+      "speed": 0,
+      "activeTime": 4,
+      "startupTime": 6,
+      "executionTime": 2,
+      "endlagTime": 3,
+      "rechargeTime": 50,
+      "damage": 80,
+      "baseKnockback": 200,
+      "knockbackRatio": 1,
+      "knockbackPoint": 32,
+      "knockbackTowardPoint": false
+    },
+    {
+      "name": "hook",
+      "type": "PROJECTILE",
+      "radius": 48,
+      "distanceFromChar": 64,
+      "speed": 700,
+      "activeTime": 100,
+      "startupTime": 10,
+      "executionTime": 0,
+      "endlagTime": 5,
+      "rechargeTime": 90,
+      "damage": 150,
+      "baseKnockback": 300,
+      "knockbackRatio": 0.2,
+      "knockbackPoint": -32,
+      "knockbackTowardPoint": false
+    },
+    {
+      "name": "mega punch",
+      "type": "MELEE",
+      "radius": 16,
+      "distanceFromChar": 32,
+      "speed": 0,
+      "activeTime": 1,
+      "startupTime": 15,
+      "executionTime": 3,
+      "endlagTime": 7,
+      "rechargeTime": 10,
+      "damage": 20,
+      "baseKnockback": 100,
+      "knockbackRatio": 1,
+      "knockbackPoint": 32,
+      "knockbackTowardPoint": false
+    }
+  ]
+}
